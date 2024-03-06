@@ -29,3 +29,12 @@ sqlite3 schema.db
 > .dump
 ```
 
+# Tags
+
+When creating new tags use semantic versioning ideas:
+
+incompatible change: increment major number
+
+backward compatible change: increment minor number
+
+change in indices etc: increment bug number
