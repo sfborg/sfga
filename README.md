@@ -1,6 +1,6 @@
-# sfgma
+# sfga
  
-Provides intermediate schema to convert from one format to another.
+Provides schema for Species File Archive format.
 
 # Usage
 
