@@ -1,7 +1,7 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE version (id);
-INSERT INTO version VALUES('v1.1.1');
+INSERT INTO version VALUES('v1.1.2');
 CREATE TABLE core (
 	-- usually corresponds to taxonID term of Darwin Core
 	"record_id" TEXT,
@@ -38,13 +38,13 @@ CREATE TABLE core (
 	-- rank of the name according to the data source
 	"rank" TEXT,
 	-- 1 if the name is a virus name
-	"virus" TEXT, 
+	"is_virus" TEXT, 
 	-- 1 if the name is a bacterial name
-	"bacteria" TEXT, 
+	"is_bacteria" TEXT, 
 	-- 1 if the name is not a "normal" scientific name
-	"surrogate" TEXT, 
+	"is_surrogate" TEXT, 
 	-- nomenclatural code of the name (ICBN, ICZN, ICN, etc.)
-	"code_id" TEXT,
+	"nomen_code" TEXT,
 	-- 0 when name is not parseable, 1 for good quality parsing,
   -- 2 for parsing with some issues, 3 for parsing with many issues
   -- 4 for parsing with critical issues
