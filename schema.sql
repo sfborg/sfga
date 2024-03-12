@@ -1,7 +1,7 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE version (id);
-INSERT INTO version VALUES('v1.1.0');
+INSERT INTO version VALUES('v1.1.1');
 CREATE TABLE core (
 	-- usually corresponds to taxonID term of Darwin Core
 	"record_id" TEXT,
@@ -9,6 +9,8 @@ CREATE TABLE core (
 	"name_id" TEXT, 
 	-- scientific name-string (with authorship if given)
 	"name" TEXT, 
+	-- authorship of the name
+	"authorship" TEXT,
 	-- year of publication of the name
 	"year" INTEGER, 
 	-- number of elements in the canonical form of the name
