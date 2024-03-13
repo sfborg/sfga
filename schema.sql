@@ -1,18 +1,18 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE version (id);
-INSERT INTO version VALUES('v1.1.2');
+INSERT INTO version VALUES('v1.2.0');
 CREATE TABLE core (
 	-- usually corresponds to taxonID term of Darwin Core
-	"record_id" TEXT,
+	"dwc_taxon_id" TEXT,
 	-- GN UUID5 generated from the scientific name
-	"name_id" TEXT, 
+	"dwc_scientific_name_id" TEXT, 
 	-- scientific name-string (with authorship if given)
-	"name" TEXT, 
+	"dwc_scientific_name" TEXT, 
 	-- authorship of the name
-	"authorship" TEXT,
+	"dwc_scientific_name_authorship" TEXT,
 	-- year of publication of the name
-	"year" INTEGER, 
+	"dwc_name_published_in_year" INTEGER, 
 	-- number of elements in the canonical form of the name
 	"cardinality" INTEGER, 
 	-- GN UUID5 generated from the canonical form of the name
@@ -28,15 +28,15 @@ CREATE TABLE core (
 	-- Stemmed canonical form of the name
 	"canonical_stem" TEXT,
 	-- ID of the currently accepted name according to the data source
-	"accepted_record_id" TEXT,
+	"dwc_accepted_name_usage_id" TEXT,
 	-- breadcrumb of the name classification according to the data source
-	"classification" TEXT,
+	"dwc_higher_classification" TEXT,
 	-- classification ids of the name according to the data source
-	"classification_ids" TEXT,
+	"higher_classification_ids" TEXT,
 	-- classification ranks of the name according to the data source
-	"classification_ranks" TEXT,
+	"higher_classification_ranks" TEXT,
 	-- rank of the name according to the data source
-	"rank" TEXT,
+	"dwc_taxon_rank" TEXT,
 	-- 1 if the name is a virus name
 	"is_virus" TEXT, 
 	-- 1 if the name is a bacterial name
@@ -44,12 +44,12 @@ CREATE TABLE core (
 	-- 1 if the name is not a "normal" scientific name
 	"is_surrogate" TEXT, 
 	-- nomenclatural code of the name (ICBN, ICZN, ICN, etc.)
-	"nomen_code" TEXT,
+	"dwc_nomenclatural_code" TEXT,
 	-- 0 when name is not parseable, 1 for good quality parsing,
   -- 2 for parsing with some issues, 3 for parsing with many issues
   -- 4 for parsing with critical issues
 	"parse_quality" INTEGER, 
-	PRIMARY KEY (record_id) );
+	PRIMARY KEY (dwc_taxon_id) );
 CREATE TABLE data_sources ( 
 	-- id is a global unique identifier of the data source
 	"id" TEXT, 
@@ -82,19 +82,19 @@ CREATE TABLE data_sources (
 	PRIMARY KEY (id) );
 CREATE TABLE vernaculars ( 	"data_source_id" INTEGER, 
 	-- record_id from the core table
-	"record_id" TEXT, 
+	"dwc_taxon_id" TEXT, 
 	-- name_id is a gn uuid5 generated from the vernacular name
-	"name_id" TEXT,
+	"vernacular_name_id" TEXT,
 	-- vernacular name in utf-8 encoding
-	"name" TEXT,
+	"dwc_vernacular_name" TEXT,
 	-- verbatim language from the source
-	"language" TEXT, 
+	"dcterms_language" TEXT, 
 	-- lang_code is the ISO 639-3 language code 
 	"lang_code" TEXT, 
 	-- locality is the place where the vernacular name was recorded
-	"locality" TEXT, 
+	"dwc:locality" TEXT, 
 	-- country_code is the ISO 3166-1 alpha-2 country code
-	"country_code" TEXT, 
-	PRIMARY KEY (record_id, name_id) );
+	"dwc:country_code" TEXT, 
+	PRIMARY KEY (dwc_taxon_id, vernacular_name_id) );
 COMMIT;
 
