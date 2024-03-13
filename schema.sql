@@ -1,7 +1,7 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE version (id);
-INSERT INTO version VALUES('v1.2.0');
+INSERT INTO version VALUES('v1.2.1');
 CREATE TABLE core (
 	-- usually corresponds to taxonID term of Darwin Core
 	"dwc_taxon_id" TEXT,
@@ -91,10 +91,12 @@ CREATE TABLE vernaculars ( 	"data_source_id" INTEGER,
 	"dcterms_language" TEXT, 
 	-- lang_code is the ISO 639-3 language code 
 	"lang_code" TEXT, 
+	-- name of the language in English
+	"lang_eng_name" TEXT,
 	-- locality is the place where the vernacular name was recorded
-	"dwc:locality" TEXT, 
+	"dwc_locality" TEXT, 
 	-- country_code is the ISO 3166-1 alpha-2 country code
-	"dwc:country_code" TEXT, 
+	"dwc_country_code" TEXT, 
 	PRIMARY KEY (dwc_taxon_id, vernacular_name_id) );
 COMMIT;
 
