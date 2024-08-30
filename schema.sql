@@ -5,7 +5,12 @@ INSERT INTO version VALUES('v1.2.1');
 CREATE TABLE core (
 	-- usually corresponds to taxonID term of Darwin Core
 	"dwc_taxon_id" TEXT,
-	-- GN UUID5 generated from the scientific name
+	-- (GN) corresponds to some local id used in the data-source
+	"local_id" TEXT,
+	-- (GN) corresponds to id used in data-source that was designed to be
+	-- unique globally.
+	"global_id" TEXT
+	-- (GN) UUID5 generated from the scientific name
 	"dwc_scientific_name_id" TEXT, 
 	-- scientific name-string (with authorship if given)
 	"dwc_scientific_name" TEXT, 
@@ -46,8 +51,8 @@ CREATE TABLE core (
 	-- nomenclatural code of the name (ICBN, ICZN, ICN, etc.)
 	"dwc_nomenclatural_code" TEXT,
 	-- 0 when name is not parseable, 1 for good quality parsing,
-  -- 2 for parsing with some issues, 3 for parsing with many issues
-  -- 4 for parsing with critical issues
+	-- 2 for parsing with some issues, 3 for parsing with many issues
+	-- 4 for parsing with critical issues
 	"parse_quality" INTEGER, 
 	PRIMARY KEY (dwc_taxon_id) );
 CREATE TABLE data_sources ( 
