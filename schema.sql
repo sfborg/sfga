@@ -1,17 +1,17 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE version (id);
-INSERT INTO version VALUES('v1.2.1');
+INSERT INTO version VALUES('v1.2.3');
 CREATE TABLE core (
 	-- usually corresponds to taxonID term of Darwin Core
 	"dwc_taxon_id" TEXT,
 	-- (GN) corresponds to some local id used in the data-source
 	"local_id" TEXT,
 	-- (GN) corresponds to id used in data-source that was designed to be
-	-- unique globally.
-	"global_id" TEXT
+	-- unique globally
+	"global_id" TEXT,
 	-- (GN) UUID5 generated from the scientific name
-	"dwc_scientific_name_id" TEXT, 
+	"dwc_scientificname_id" TEXT, 
 	-- scientific name-string (with authorship if given)
 	"dwc_scientific_name" TEXT, 
 	-- authorship of the name
@@ -29,7 +29,7 @@ CREATE TABLE core (
 	-- full canonical form of the name (with ranks and hybrid markers)
 	"canonical_full" TEXT,
 	-- GN UUID5 generated from the stem of the stemmed canonical form of the name
-	"canonical_stem_id" TEXT, 
+	"canonical_stem_id" TEXT,
 	-- Stemmed canonical form of the name
 	"canonical_stem" TEXT,
 	-- ID of the currently accepted name according to the data source
@@ -53,9 +53,14 @@ CREATE TABLE core (
 	-- 0 when name is not parseable, 1 for good quality parsing,
 	-- 2 for parsing with some issues, 3 for parsing with many issues
 	-- 4 for parsing with critical issues
-	"parse_quality" INTEGER, 
-	PRIMARY KEY (dwc_taxon_id) );
-CREATE TABLE data_sources ( 
+	"parse_quality" INTEGER
+);
+
+CREATE INDEX idx_dwc_taxon_id ON core (dwc_taxon_id);
+
+-- data_source supposed to have one record that shows information about
+-- the creator of the dataset.
+CREATE TABLE data_source ( 
 	-- id is a global unique identifier of the data source
 	"id" TEXT, 
 	-- gn_id is an id used by the Global Names project
@@ -83,8 +88,8 @@ CREATE TABLE data_sources (
 	-- the number of records in the data
 	"record_count" INTEGER, 
 	-- the data when this archive was created
-	"updated_at" TEXT, 
-	PRIMARY KEY (id) );
+	"updated_at" TEXT 
+);
 CREATE TABLE vernaculars ( 	"data_source_id" INTEGER, 
 	-- record_id from the core table
 	"dwc_taxon_id" TEXT, 
@@ -101,7 +106,8 @@ CREATE TABLE vernaculars ( 	"data_source_id" INTEGER,
 	-- locality is the place where the vernacular name was recorded
 	"dwc_locality" TEXT, 
 	-- country_code is the ISO 3166-1 alpha-2 country code
-	"dwc_country_code" TEXT, 
-	PRIMARY KEY (dwc_taxon_id, vernacular_name_id) );
+	"dwc_country_code" TEXT
+	);	
+	CREATE INDEX idx_taxon_name ON vernaculars (dwc_taxon_id, vernacular_name_id);
 COMMIT;
 
