@@ -1,7 +1,7 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE version (id);
-INSERT INTO version VALUES('v1.2.3');
+INSERT INTO version VALUES('v1.2.5');
 CREATE TABLE core (
 	-- usually corresponds to taxonID term of Darwin Core
 	"dwc_taxon_id" TEXT,
@@ -11,7 +11,7 @@ CREATE TABLE core (
 	-- unique globally
 	"global_id" TEXT,
 	-- (GN) UUID5 generated from the scientific name
-	"dwc_scientificname_id" TEXT, 
+	"dwc_scientific_name_id" TEXT, 
 	-- scientific name-string (with authorship if given)
 	"dwc_scientific_name" TEXT, 
 	-- authorship of the name
