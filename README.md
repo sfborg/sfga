@@ -7,16 +7,16 @@ Provides schema for Species File Archive format.
 To import latest
 
 ```bash
-git clone git@github.com/sfborg/sfgma
-cd sfgma
+git clone git@github.com/sfborg/sfga
+cd sfga
 cp schema.db dest/schema.sqlite
 ```
 
 To import a particular tag
 
 ```bash
-git clone -b v1.0.0 git@github.com/sfborg/sfgma
-cd sfgma
+git clone -b v1.0.0 git@github.com/sfborg/sfga
+cd sfga
 cp schema.db dest/schema.sqlite
 ```
 
