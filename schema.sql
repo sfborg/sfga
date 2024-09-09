@@ -1,7 +1,7 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE version (id);
-INSERT INTO version VALUES('v1.2.6');
+INSERT INTO version VALUES('v0.2.6');
 CREATE TABLE core (
 	-- usually corresponds to taxonID term of Darwin Core
 	"dwc_taxon_id" TEXT NOT NULL DEFAULT '',
