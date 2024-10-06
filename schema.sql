@@ -2,11 +2,13 @@ PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE version (id);
 INSERT INTO version VALUES('v0.2.6');
-CREATE TABLE core (
+CREATE TABLE taxon (
 	-- usually corresponds to taxonID term of Darwin Core
+	-- maps to (GN) record_id
 	"dwc_taxon_id" TEXT NOT NULL DEFAULT '',
-	-- (GN) corresponds to some local id used in the data-source
-	"local_id" TEXT NOT NULL DEFAULT '',
+	-- corresponds to some local id used in the data-source
+	-- maps to (GN) local_id
+	"alternative_id" TEXT NOT NULL DEFAULT '',
 	-- (GN) corresponds to id used in data-source that was designed to be
 	-- unique globally
 	"global_id" TEXT NOT NULL DEFAULT '',
@@ -42,6 +44,9 @@ CREATE TABLE core (
 	"higher_classification_ranks" TEXT NOT NULL DEFAULT '',
 	-- rank of the name according to the data source
 	"dwc_taxon_rank" TEXT NOT NULL DEFAULT '',
+	-- corresponds to DwCA taxonomicStatus, status of using name-string
+	-- as a label to taxon.
+	"dwc_taxonomic_status" TEXT DEFAULT '',
 	-- 1 if the name is a virus name
 	"is_virus" TEXT NOT NULL DEFAULT '', 
 	-- 1 if the name is a bacterial name
