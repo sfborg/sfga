@@ -69,6 +69,7 @@ CREATE TABLE person (
 
 CREATE TABLE organization (
    id INTEGER,
+   rorid TEXT,
    name TEXT,
    email TEXT,
    url TEXT
