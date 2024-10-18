@@ -1,7 +1,7 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE version (id);
-INSERT INTO version VALUES('v0.3.4');
+INSERT INTO version VALUES('v0.3.5');
 
 -- Metadata start
 
@@ -30,49 +30,53 @@ CREATE TABLE metadata (
 CREATE TABLE contact (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    metadata_id INTEGER,
-   person_id INTEGER,
-   organization_id INTEGER,
+   orcid TEXT,
+   given TEXT,
+   family TEXT,
+   rorid TEXT,
+   name TEXT,
+   email TEXT,
+   url TEXT,
    note TEXT 
 );
 
 CREATE TABLE editor (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    metadata_id INTEGER,
-   person_id INTEGER,
-   organization_id INTEGER,
+   orcid TEXT,
+   given TEXT,
+   family TEXT,
+   rorid TEXT,
+   name TEXT,
+   email TEXT,
+   url TEXT,
    note TEXT
 );
 
 CREATE TABLE publisher (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    metadata_id INTEGER,
-   person_id INTEGER,
-   organization_id INTEGER,
+   orcid TEXT,
+   given TEXT,
+   family TEXT,
+   rorid TEXT,
+   name TEXT,
+   email TEXT,
+   url TEXT,
    note TEXT
 );
 
 CREATE TABLE contributor (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    metadata_id INTEGER,
-   person_id INTEGER,
-   organization_id INTEGER,
-   note TEXT
-);
-
-CREATE TABLE person (
-   id INTEGER PRIMARY KEY AUTOINCREMENT,
    orcid TEXT,
    given TEXT,
    family TEXT,
-   email TEXT
-);
-
-CREATE TABLE organization (
-   id INTEGER PRIMARY KEY AUTOINCREMENT,
    rorid TEXT,
    name TEXT,
    email TEXT,
-   url TEXT
+   url TEXT,
+   note TEXT
 );
 
 CREATE TABLE source (
