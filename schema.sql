@@ -1,7 +1,7 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE version (id);
-INSERT INTO version VALUES('v0.3.2');
+INSERT INTO version VALUES('v0.3.3');
 
 -- Metadata start
 
@@ -78,12 +78,12 @@ CREATE TABLE organization (
 CREATE TABLE source (
   id TEXT,
   metadata_id INTEGER,
-	type TEXT, 
-	title TEXT, 
-	authors TEXT,
-	issued TEXT,
-	isbn TEXT 
-)
+  type TEXT, 
+  title TEXT, 
+  authors TEXT,
+  issued TEXT,
+  isbn TEXT 
+);
 
 -- Metadata end
 
