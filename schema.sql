@@ -5,7 +5,7 @@ INSERT INTO version VALUES('v0.3.0');
 
 -- Metadata start
 
-CREATE TABLE source (
+CREATE TABLE metadata (
    id INTEGER,
    doi TEXT,
    title TEXT,
@@ -29,7 +29,7 @@ CREATE TABLE source (
 
 CREATE TABLE contact (
    id INTEGER,
-   source_id INTEGER,
+   metadata_id INTEGER,
    person_id INTEGER,
    organization_id INTEGER,
    note TEXT 
@@ -37,7 +37,7 @@ CREATE TABLE contact (
 
 CREATE TABLE editor (
    id INTEGER,
-   source_id INTEGER,
+   metadata_id INTEGER,
    person_id INTEGER,
    organization_id INTEGER,
    note TEXT
@@ -45,7 +45,7 @@ CREATE TABLE editor (
 
 CREATE TABLE publisher (
    id INTEGER,
-   source_id INTEGER,
+   metadata_id INTEGER,
    person_id INTEGER,
    organization_id INTEGER,
    note TEXT
@@ -53,7 +53,7 @@ CREATE TABLE publisher (
 
 CREATE TABLE contributor (
    id INTEGER,
-   source_id INTEGER,
+   metadata_id INTEGER,
    person_id INTEGER,
    organization_id INTEGER,
    note TEXT
