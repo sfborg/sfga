@@ -1,7 +1,7 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE version (id);
-INSERT INTO version VALUES('v0.3.5');
+INSERT INTO version VALUES('v0.3.6');
 
 -- Metadata start
 
@@ -41,6 +41,19 @@ CREATE TABLE contact (
 );
 
 CREATE TABLE editor (
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   metadata_id INTEGER,
+   orcid TEXT,
+   given TEXT,
+   family TEXT,
+   rorid TEXT,
+   name TEXT,
+   email TEXT,
+   url TEXT,
+   note TEXT
+);
+
+CREATE TABLE creator (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
    metadata_id INTEGER,
    orcid TEXT,
@@ -179,5 +192,19 @@ INSERT INTO gender (id, value) VALUES
   (1, 'MASCULINE'),
   (2, 'FEMININE'),
   (3, 'NEUTRAL');
+
+CREATE TABLE name_status (
+   id INTEGER,
+   value TEXT
+);
+INSERT INTO name_status (id, value) VALUES
+	(1, 'Established'),
+	(1, 'Acceptable'),
+	(1, 'Unacceptable'),
+	(1, 'CoervedNS'),
+	(1, 'Rejected'),
+	(1, 'Doubtful'),
+	(1, 'Manuscript'),
+	(1, 'Chresonym');
 
 COMMIT;
