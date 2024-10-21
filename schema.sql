@@ -1,7 +1,7 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE version (id);
-INSERT INTO version VALUES('v0.3.6');
+INSERT INTO version VALUES('v0.3.7');
 
 -- Metadata start
 
@@ -93,7 +93,7 @@ CREATE TABLE contributor (
 );
 
 CREATE TABLE source (
-  id TEXT,
+  id TEXT PRIMARY KEY,
   metadata_id INTEGER,
   type TEXT, 
   title TEXT, 
@@ -105,30 +105,117 @@ CREATE TABLE source (
 -- Metadata end
 
 CREATE TABLE taxon (
-   id TEXT,
-   name_id TEXT,
+   id TEXT PRIMARY KEY,
+   alternative_id TEXT,
+   source_id TEXT,
    parent_id TEXT,
+   ordinal TEXT,
+   branch_length INTEGER,
+   name_id TEXT,
+   name_phrase TEXT,
    according_to_id TEXT,
+   according_to_page TEXT,
+   according_to_page_link TEXT,
    scrutinizer TEXT,
    scrutinizer_id TEXT,
    scrutinizer_date TEXT,
+   provisional INTEGER,
    reference_id TEXT,
-   link TEXT
+   extinct INTEGER,
+   temporal_range_start INTEGER,
+   temporal_range_end INTEGER,
+   environment TEXT,
+   species TEXT,
+   section TEXT,
+   subgenus TEXT,
+   subtribe TEXT,
+   tribe TEXT,
+   subfamily TEXT,
+   family TEXT,
+   supberfamily TEXT,
+   suborder TEXT,
+   ordr TEXT,
+   subclass TEXT,
+   class TEXT,
+   subphylum TEXT,
+   phylum TEXT,
+   kingdom TEXT,
+   link TEXT,
+   remarks TEXT,
+   modified TEXT,
+   modified_by TEXT
 );
-CREATE INDEX idx_taxon_id ON taxon (id);
 
 CREATE TABLE reference (
-   id TEXT,
+   -- id is a local id used as reference_id in other tables
+   id TEXT PRIMARY KEY,
+   -- alternative_id is a list of other ids with comma as separator
+   alternative_id TEXT,
+   -- source_id from metadata
+   source_id TEXT,
+   -- citation from bibliography
    citation TEXT,
-   link TEXT,
+   -- type according to JSON CSL types
+   type TEXT,
+   -- author/s in format of either
+   -- amily1, given1; family2, given2; ..
+   -- or
+   -- given1 family1, given2 family2, ...
+   author TEXT,
+   -- author_ids separated by comma
+   author_id TEXT,
+   -- editor/s of the work (same format as for authors)
+   editor TEXT,
+   -- editor_id/s separated by comma
+   editor_id TEXT,
+   -- title of the work
+   title TEXT,
+   -- title_short of the work
+   title_short TEXT,
+   -- container_author is an author or a parent volume (book, journal) 
+   container_author TEXT,
+   -- container_title of the parent container
+   container_title TEXT,
+   -- container_title_short of the parent container
+   container_title_short TEXT,
+   -- date when reference was issued
+   issued TEXT,
+   -- date when the reference was accessed
+   accessed TEXT,
+   -- collection_title of the parent volume
+   collection_title TEXT,
+   -- collection_editor of the parent volume
+   collection_editor TEXT,
+   -- volume number of the reference
+   volume TEXT,
+   -- issue number of the reference
+   issue TEXT,
+   -- edition number
+   edition TEXT,
+   -- page number
+   page TEXT,
+   -- publisher name
+   publisher TEXT,
+   -- publisher_place
+   publisher_place TEXT,
+   -- verion of the reference
+   version TEXT,
+   -- isbn ID
+   isbn TEXT,
+   -- issn ID
+   issn TEXT,
+   -- doi
    doi TEXT,
+   -- link (URL) to the reference
+   link TEXT,
+   -- remarks or notes about the reference
    remarks TEXT
 );
-CREATE INDEX idx_reference_id ON reference (id);
 
 CREATE TABLE name (
-   id TEXT,
+   id TEXT PRIMARY KEY,
    alternative_id TEXT,
+   source_id TEXT,
    basionym_id TEXT,
    scientific_name TEXT,
    authorship TEXT,
@@ -138,26 +225,56 @@ CREATE TABLE name (
    infrageneric_epithet TEXT,
    specific_epithet TEXT,
    infraspecific_epithet TEXT,
+   cultivar_epithet TEXT,
+   notho INTEGER,
+   -- original_spelling bool
+   original_spelling INTEGER,
+   combination_authorship TEXT,
+   combination_authorship_id TEXT,
+   combination_ex_authorship TEXT,
+   combination_ex_authorship_id TEXT,
+   combination_authorship_year TEXT,
+   basionym_authorship TEXT,
+   basionym_authorship_id TEXT,
+   basionym_ex_authorship TEXT,
+   basionym_ex_authorship_id TEXT,
+   basionym_authorship_year TEXT,
    -- code is nomenclatural code, it corresponds to IDs from nomcode.
    code INTEGER,
-   referenceID TEXT,
-   publishedInYear TEXT,
-   link TEXT
+   -- status is enumeration of name statuses
+   status INTEGER,
+   reference_id TEXT,
+   published_in_year TEXT,
+   published_in_page TEXT,
+   published_in_page_link TEXT,
+   gender INTEGER,
+   -- gender_agreement bool
+   gender_agreement INTEGER,
+   etymology TEXT,
+   link TEXT,
+   remarks TEXT,
+   modified TEXT,
+   modified_by TEXT
 );
-CREATE INDEX idx_name_id ON name (id);
 
 CREATE TABLE synonym (
-   id TEXT,
+   id TEXT PRIMARY KEY,
    taxon_id TEXT,
+   source_id TEXT,
    name_id TEXT,
+   name_phrase TEXT,
    according_to_id TEXT,
+   status INTEGER,
    reference_id TEXT,
-   link TEXT
+   link TEXT,
+   remarks TEXT,
+   modified TEXT,
+   modified_by TEXT
 );
-CREATE INDEX idx_synonym_id ON synonym (id);
 
 CREATE TABLE vernacular (
    taxon_id TEXT,
+   source_id TEXT,
    name TEXT,
    transliteration TEXT,
    language TEXT,
