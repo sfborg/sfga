@@ -1,7 +1,7 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE version (id);
-INSERT INTO version VALUES('v0.3.7');
+INSERT INTO version VALUES('v0.3.8');
 
 -- Metadata start
 
@@ -257,6 +257,16 @@ CREATE TABLE name (
    modified_by TEXT
 );
 
+
+CREATE TABLE name_relation (
+  name_id TEXT NOT NULL,
+  related_name_id TEXT,
+  source_id TEXT,
+  type TEXT NOT NULL,
+  reference_id TEXT,
+  remarks TEXT
+);
+
 CREATE TABLE synonym (
    id TEXT PRIMARY KEY,
    taxon_id TEXT,
@@ -288,6 +298,100 @@ CREATE TABLE vernacular (
    modified_by TEXT
 );
 CREATE INDEX idx_vernacular_id ON vernacular (taxon_id);
+
+CREATE TABLE type_material (
+  id TEXT PRIMARY KEY,
+  source_id TEXT,
+  name_id TEXT NOT NULL,
+  citation TEXT,
+  status TEXT,
+  institution_code TEXT,
+  catalog_number TEXT,
+  reference_id TEXT,
+  locality TEXT,
+  country TEXT,
+  latitude REAL,
+  longitude REAL,
+  altitude INTEGER,
+  host TEXT,
+  sex TEXT,
+  date TEXT,
+  collector TEXT,
+  associated_sequences TEXT,
+  link TEXT,
+  remarks TEXT
+);
+
+CREATE TABLE distribution (
+  taxon_id TEXT NOT NULL,
+  source_id TEXT,
+  area TEXT NOT NULL,
+  area_id TEXT,
+  gazetteer TEXT,
+  status TEXT,
+  reference_id TEXT,
+  remarks TEXT
+);
+
+CREATE TABLE media (
+  taxon_id TEXT NOT NULL REFERENCES name_usage,
+  source_id TEXT,
+  url TEXT NOT NULL,
+  type TEXT,
+  format TEXT,
+  title TEXT,
+  created TEXT,
+  creator TEXT,
+  license TEXT,
+  link TEXT,
+  remarks TEXT  
+);
+
+CREATE TABLE treatment (
+  taxon_id TEXT NOT NULL,
+  source_id TEXT,
+  document TEXT NOT NULL,
+  format TEXT
+);
+
+CREATE TABLE species_estimate (
+  taxon_id TEXT NOT NULL,
+  source_id TEXT,
+  estimate INTEGER NOT NULL,
+  type TEXT NOT NULL,
+  reference_id TEXT,
+  remarks TEXT
+);
+
+CREATE TABLE taxon_property (
+  taxon_id TEXT NOT NULL,
+  source_id TEXT,
+  property TEXT NOT NULL,
+  value TEXT NOT NULL,
+  reference_id TEXT,
+  page TEXT,
+  ordinal INTEGER,
+  remarks TEXT
+);
+
+CREATE TABLE species_interaction (
+  taxon_id TEXT NOT NULL,
+  related_taxon_id TEXT,
+  source_id TEXT,
+  related_taxon_scientific_name TEXT,
+  type TEXT NOT NULL,
+  reference_id TEXT,
+  remarks TEXT
+);
+
+CREATE TABLE taxon_concept_relation (
+  taxon_id TEXT NOT NULL,
+  related_taxon_id TEXT,
+  source_id TEXT,
+  type TEXT NOT NULL,
+  reference_id TEXT,
+  remarks TEXT
+);
 
 CREATE TABLE nomcode (
    id INTEGER,
