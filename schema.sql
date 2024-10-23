@@ -93,13 +93,13 @@ CREATE TABLE contributor (
 );
 
 CREATE TABLE source (
-  id TEXT PRIMARY KEY,
-  metadata_id INTEGER,
-  type TEXT, 
-  title TEXT, 
-  authors TEXT,
-  issued TEXT,
-  isbn TEXT 
+   id TEXT PRIMARY KEY,
+   metadata_id INTEGER,
+   type TEXT, 
+   title TEXT, 
+   authors TEXT,
+   issued TEXT,
+   isbn TEXT 
 );
 
 -- Metadata end
@@ -229,6 +229,7 @@ CREATE TABLE name (
    notho INTEGER,
    -- original_spelling bool
    original_spelling INTEGER,
+   -- authors separated by '|'
    combination_authorship TEXT,
    combination_authorship_id TEXT,
    combination_ex_authorship TEXT,
@@ -259,12 +260,12 @@ CREATE TABLE name (
 
 
 CREATE TABLE name_relation (
-  name_id TEXT NOT NULL,
-  related_name_id TEXT,
-  source_id TEXT,
-  type TEXT NOT NULL,
-  reference_id TEXT,
-  remarks TEXT
+   name_id TEXT NOT NULL,
+   related_name_id TEXT,
+   source_id TEXT,
+   type TEXT NOT NULL,
+   reference_id TEXT,
+   remarks TEXT
 );
 
 CREATE TABLE synonym (
@@ -300,97 +301,97 @@ CREATE TABLE vernacular (
 CREATE INDEX idx_vernacular_id ON vernacular (taxon_id);
 
 CREATE TABLE type_material (
-  id TEXT PRIMARY KEY,
-  source_id TEXT,
-  name_id TEXT NOT NULL,
-  citation TEXT,
-  status TEXT,
-  institution_code TEXT,
-  catalog_number TEXT,
-  reference_id TEXT,
-  locality TEXT,
-  country TEXT,
-  latitude REAL,
-  longitude REAL,
-  altitude INTEGER,
-  host TEXT,
-  sex TEXT,
-  date TEXT,
-  collector TEXT,
-  associated_sequences TEXT,
-  link TEXT,
-  remarks TEXT
+   id TEXT PRIMARY KEY,
+   source_id TEXT,
+   name_id TEXT NOT NULL,
+   citation TEXT,
+   status TEXT,
+   institution_code TEXT,
+   catalog_number TEXT,
+   reference_id TEXT,
+   locality TEXT,
+   country TEXT,
+   latitude REAL,
+   longitude REAL,
+   altitude INTEGER,
+   host TEXT,
+   sex TEXT,
+   date TEXT,
+   collector TEXT,
+   associated_sequences TEXT,
+   link TEXT,
+   remarks TEXT
 );
 
 CREATE TABLE distribution (
-  taxon_id TEXT NOT NULL,
-  source_id TEXT,
-  area TEXT NOT NULL,
-  area_id TEXT,
-  gazetteer TEXT,
-  status TEXT,
-  reference_id TEXT,
-  remarks TEXT
+   taxon_id TEXT NOT NULL,
+   source_id TEXT,
+   area TEXT NOT NULL,
+   area_id TEXT,
+   gazetteer TEXT,
+   status TEXT,
+   reference_id TEXT,
+   remarks TEXT
 );
 
 CREATE TABLE media (
-  taxon_id TEXT NOT NULL REFERENCES name_usage,
-  source_id TEXT,
-  url TEXT NOT NULL,
-  type TEXT,
-  format TEXT,
-  title TEXT,
-  created TEXT,
-  creator TEXT,
-  license TEXT,
-  link TEXT,
-  remarks TEXT  
+   taxon_id TEXT NOT NULL REFERENCES name_usage,
+   source_id TEXT,
+   url TEXT NOT NULL,
+   type TEXT,
+   format TEXT,
+   title TEXT,
+   created TEXT,
+   creator TEXT,
+   license TEXT,
+   link TEXT,
+   remarks TEXT  
 );
 
 CREATE TABLE treatment (
-  taxon_id TEXT NOT NULL,
-  source_id TEXT,
-  document TEXT NOT NULL,
-  format TEXT
+   taxon_id TEXT NOT NULL,
+   source_id TEXT,
+   document TEXT NOT NULL,
+   format TEXT
 );
 
 CREATE TABLE species_estimate (
-  taxon_id TEXT NOT NULL,
-  source_id TEXT,
-  estimate INTEGER NOT NULL,
-  type TEXT NOT NULL,
-  reference_id TEXT,
-  remarks TEXT
+   taxon_id TEXT NOT NULL,
+   source_id TEXT,
+   estimate INTEGER NOT NULL,
+   type TEXT NOT NULL,
+   reference_id TEXT,
+   remarks TEXT
 );
 
 CREATE TABLE taxon_property (
-  taxon_id TEXT NOT NULL,
-  source_id TEXT,
-  property TEXT NOT NULL,
-  value TEXT NOT NULL,
-  reference_id TEXT,
-  page TEXT,
-  ordinal INTEGER,
-  remarks TEXT
+   taxon_id TEXT NOT NULL,
+   source_id TEXT,
+   property TEXT NOT NULL,
+   value TEXT NOT NULL,
+   reference_id TEXT,
+   page TEXT,
+   ordinal INTEGER,
+   remarks TEXT
 );
 
 CREATE TABLE species_interaction (
-  taxon_id TEXT NOT NULL,
-  related_taxon_id TEXT,
-  source_id TEXT,
-  related_taxon_scientific_name TEXT,
-  type TEXT NOT NULL,
-  reference_id TEXT,
-  remarks TEXT
+   taxon_id TEXT NOT NULL,
+   related_taxon_id TEXT,
+   source_id TEXT,
+   related_taxon_scientific_name TEXT,
+   type TEXT NOT NULL,
+   reference_id TEXT,
+   remarks TEXT
 );
 
 CREATE TABLE taxon_concept_relation (
-  taxon_id TEXT NOT NULL,
-  related_taxon_id TEXT,
-  source_id TEXT,
-  type TEXT NOT NULL,
-  reference_id TEXT,
-  remarks TEXT
+   taxon_id TEXT NOT NULL,
+   related_taxon_id TEXT,
+   source_id TEXT,
+   type TEXT NOT NULL,
+   reference_id TEXT,
+   remarks TEXT
 );
 
 CREATE TABLE nomcode (
@@ -398,34 +399,145 @@ CREATE TABLE nomcode (
    value TEXT
 );
 INSERT INTO nomcode (id, value) VALUES
-  (1, 'BACTERIAL'),
-  (2, 'BOTANICAL'),
-  (3, 'CULTIVARS'),
-  (4, 'PHYTOSOCIOLOGICAL'),
-  (5, 'VIRUS'),
-  (6, 'ZOOLOGICAL');
+   (1, 'BACTERIAL'),
+   (2, 'BOTANICAL'),
+   (3, 'CULTIVARS'),
+   (4, 'PHYTOSOCIOLOGICAL'),
+   (5, 'VIRUS'),
+   (6, 'ZOOLOGICAL');
 
 CREATE TABLE gender (
    id INTEGER,
    value TEXT
 );
 INSERT INTO gender (id, value) VALUES
-  (1, 'MASCULINE'),
-  (2, 'FEMININE'),
-  (3, 'NEUTRAL');
+   (1, 'MASCULINE'),
+   (2, 'FEMININE'),
+   (3, 'NEUTRAL');
 
 CREATE TABLE name_status (
    id INTEGER,
    value TEXT
 );
-INSERT INTO name_status (id, value) VALUES
-	(1, 'Established'),
-	(1, 'Acceptable'),
-	(1, 'Unacceptable'),
-	(1, 'CoervedNS'),
-	(1, 'Rejected'),
-	(1, 'Doubtful'),
-	(1, 'Manuscript'),
-	(1, 'Chresonym');
+INSERT INTO nom_status (id, value) VALUES
+   (1, 'Established'),
+   (2, 'Acceptable'),
+   (3, 'Unacceptable'),
+   (4, 'CoervedNS'),
+   (5, 'Rejected'),
+   (6, 'Doubtful'),
+   (7, 'Manuscript'),
+   (8, 'Chresonym');
+
+CREATE TABLE rank (
+   id INTEGER,
+   value TEXT
+);
+INSERT INTO rank (id, value) VALUES
+   (1, 'Aberration'),
+   (2, 'Biovar'),
+   (3, 'Chemoform'),
+   (4, 'Chemovar'),
+   (5, 'Class'),
+   (6, 'Cohort'),
+   (7, 'Convariety'),
+   (8, 'Cultivar'),
+   (9, 'CultivarGroup'),
+   (10, 'Division'),
+   (11, 'Domain'),
+   (12, 'Epifamily'),
+   (13, 'Falanx'),
+   (14, 'Family'),
+   (15, 'Form'),
+   (16, 'FormaSpecialis'),
+   (17, 'Genus'),
+   (18, 'Gigaclass'),
+   (19, 'Gigaorder'),
+   (20, 'Grandfamily'),
+   (21, 'Grandorder'),
+   (22, 'Grex'),
+   (23, 'Hypoorder'),
+   (24, 'Infraclass'),
+   (25, 'Infracohort'),
+   (26, 'Infradivision'),
+   (27, 'Infrafamily'),
+   (28, 'InfragenericName'),
+   (29, 'Infragenus'),
+   (30, 'Infrakingdom'),
+   (31, 'Infralegion'),
+   (32, 'Infraorder'),
+   (33, 'Infraphylum'),
+   (34, 'InfraspecificName'),
+   (35, 'InfrasubspecificName'),
+   (36, 'Infratribe'),
+   (37, 'Kingdom'),
+   (38, 'Klepton'),
+   (39, 'Legion'),
+   (40, 'Lusus'),
+   (41, 'Magnorder'),
+   (42, 'Megaclass'),
+   (43, 'Megacohort'),
+   (44, 'Megafamily'),
+   (45, 'Microphylum'),
+   (46, 'Minorder'),
+   (47, 'Mirorder'),
+   (48, 'Morph'),
+   (49, 'Morphovar'),
+   (50, 'Mutatio'),
+   (51, 'Nanophylum'),
+   (52, 'Nanorder'),
+   (53, 'Natio'),
+   (54, 'Order'),
+   (55, 'Other'),
+   (56, 'Parvclass'),
+   (57, 'Parvorder'),
+   (58, 'Parvphylum'),
+   (59, 'Pathovar'),
+   (60, 'Phagovar'),
+   (61, 'Phylum'),
+   (62, 'Proles'),
+   (63, 'Realm'),
+   (64, 'Section'),
+   (65, 'Series'),
+   (66, 'Serovar'),
+   (67, 'Species'),
+   (68, 'SpeciesAggregate'),
+   (69, 'Strain'),
+   (70, 'Subclass'),
+   (71, 'Subcohort'),
+   (72, 'Subdivision'),
+   (73, 'Subfamily'),
+   (74, 'Subform'),
+   (75, 'Subgenus'),
+   (76, 'Subkingdom'),
+   (77, 'Sublegion'),
+   (78, 'Suborder'),
+   (79, 'Subphylum'),
+   (80, 'Subrealm'),
+   (81, 'Subsection'),
+   (82, 'Subseries'),
+   (83, 'Subspecies'),
+   (84, 'Subterclass'),
+   (85, 'Subtribe'),
+   (86, 'Subvariety'),
+   (87, 'Superclass'),
+   (88, 'Supercohort'),
+   (89, 'Superdivision'),
+   (90, 'Superdomain'),
+   (91, 'Superfamily'),
+   (92, 'Superform'),
+   (93, 'Supergenus'),
+   (94, 'Superkingdom'),
+   (95, 'Superlegion'),
+   (96, 'Superorder'),
+   (97, 'Superphylum'),
+   (98, 'Supersection'),
+   (99, 'Superseries'),
+   (100, 'Supertribe'),
+   (101, 'Supervariety'),
+   (102, 'SupragenericName'),
+   (103, 'Tribe'),
+   (104, 'Unranked'),
+   (105, 'Variety');
 
 COMMIT;
