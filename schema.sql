@@ -446,6 +446,16 @@ INSERT INTO gender (id, value) VALUES
    (2, 'Feminine'),
    (3, 'Neutral');
 
+
+CREATE TABLE sex (
+   id INTEGER,
+   value TEXT
+);
+INSERT INTO sex (id, value) VALUES
+  (1, 'Female'),
+  (2, 'Male'),
+  (3, 'Hermaphrodite');
+
 CREATE TABLE nom_rel_type (
    id INTEGER,
    value TEXT
