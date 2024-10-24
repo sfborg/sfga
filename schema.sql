@@ -111,13 +111,13 @@ CREATE TABLE source (
 CREATE TABLE taxon (
   id TEXT PRIMARY KEY,
   alternative_id TEXT,
-  source_id TEXT, -- ref source
-  parent_id TEXT,
+  source_id TEXT REFERENCES source(id),
+  parent_id TEXT REFERENCES taxon(id),
   ordinal INTEGER,
   branch_length INTEGER,
-  name_id TEXT, -- ref name
+  name_id TEXT REFERENCES name(id),
   name_phrase TEXT,
-  according_to_id TEXT, -- ref reference
+  according_to_id TEXT REFERENCES reference(id),
   according_to_page TEXT,
   according_to_page_link TEXT,
   scrutinizer TEXT,
@@ -126,9 +126,9 @@ CREATE TABLE taxon (
   provisional INTEGER, -- bool
   reference_id TEXT, -- list of references about the taxon hypothesis
   extinct INTEGER, -- bool
-  temporal_range_start_id INTEGER, -- ref geo_time
-  temporal_range_end_id INTEGER, -- ref geo_time
-  environment_id INTEGER, -- ref environment
+  temporal_range_start_id TEXT REFERENCES geo_time(id),
+  temporal_range_end_id TEXT REFERENCES geo_time(id),
+  environment_id TEXT, -- environment ids sep by ','
   species TEXT,
   section TEXT,
   subgenus TEXT,
@@ -138,7 +138,7 @@ CREATE TABLE taxon (
   family TEXT,
   supberfamily TEXT,
   suborder TEXT,
-  ordr TEXT, -- cannot use keyword `order`
+  "order" TEXT,
   subclass TEXT,
   class TEXT,
   subphylum TEXT,
@@ -147,14 +147,7 @@ CREATE TABLE taxon (
   link TEXT,
   remarks TEXT,
   modified TEXT,
-  modified_by TEXT,
-  FOREIGN KEY (source_id) REFERENCES source (id),
-  FOREIGN KEY (parent_id) REFERENCES taxon (id),
-  FOREIGN KEY (name_id) REFERENCES name (id),
-  FOREIGN KEY (according_to_id) REFERENCES reference (id),
-  FOREIGN KEY (temporal_range_start_id) REFERENCES geo_time (id),
-  FOREIGN KEY (temporal_range_end_id) REFERENCES geo_time (id),
-  FOREIGN KEY (environment_id) REFERENCES environment (id)
+  modified_by TEXT
 );
 
 CREATE TABLE name (
@@ -162,16 +155,16 @@ CREATE TABLE name (
   alternative_id TEXT,
   source_id TEXT,
   basionym_id TEXT, -- use nom_rel_type instead
-  scientific_name TEXT, -- vull canonical form
+  scientific_name TEXT, -- full canonical form
   authorship TEXT, -- verbatim authorship
-  rank_id INTEGER, -- ref rank
+  rank_id INTEGER REFERENCES rank(id),
   uninomial TEXT,
   genus TEXT,
   infrageneric_epithet TEXT,
   specific_epithet TEXT,
   infraspecific_epithet TEXT,
   cultivar_epithet TEXT,
-  notho_id INTEGER, -- ref name_part
+  notho_id TEXT, -- ref name_part
   original_spelling INTEGER, -- bool
   combination_authorship TEXT, -- separated by '|'
   combination_authorship_id TEXT, -- separated by '|'
@@ -183,65 +176,50 @@ CREATE TABLE name (
   basionym_ex_authorship TEXT, -- separated by '|'
   basionym_ex_authorship_id TEXT, -- separated by '|'
   basionym_authorship_year TEXT,
-  code_id INTEGER, -- ref nom_code
-  status_id INTEGER, -- ref nom_status
+  code_id TEXT REFERENCES nom_code,
+  status_id TEXT REFERENCES nom_status,
   reference_id TEXT,
   published_in_year TEXT,
   published_in_page TEXT,
   published_in_page_link TEXT,
-  gender_id INTEGER, -- ref gender
+  gender_id TEXT REFERENCES gender,
   gender_agreement INTEGER, -- bool
   etymology TEXT,
   link TEXT,
   remarks TEXT,
   modified TEXT,
-  modified_by TEXT,
-  FOREIGN KEY (source_id) REFERENCES source (id),
-  FOREIGN KEY (basionym_id) REFERENCES name (id),
-  FOREIGN KEY (rank_id) REFERENCES rank(id),
-  FOREIGN KEY (notho_id) REFERENCES name_part (id),
-  FOREIGN KEY (status_id) REFERENCES nom_status (id),
-  FOREIGN KEY (gender_id) REFERENCES gender (id)
+  modified_by TEXT
 );
 
 CREATE TABLE synonym (
   id TEXT PRIMARY KEY,
-  taxon_id TEXT, -- ref taxon
-  source_id TEXT, -- ref source
-  name_id TEXT, -- ref name
+  taxon_id TEXT REFERENCES taxon,
+  source_id TEXT REFERENCES source,
+  name_id TEXT REFERENCES name,
   name_phrase TEXT,
-  according_to_id TEXT, -- ref reference
-  status_id INTEGER, -- ref taxonomic_status
+  according_to_id TEXT REFERENCES reference,
+  status_id TEXT REFERENCES taxonomic_status,
   reference_id TEXT, -- ids, sep by ',' about this synonym
   link TEXT,
   remarks TEXT,
   modified TEXT,
-  modified_by TEXT,
-  FOREIGN KEY (taxon_id) REFERENCES taxon (id),
-  FOREIGN KEY (source_id) REFERENCES source (id),
-  FOREIGN KEY (name_id) REFERENCES name (id),
-  FOREIGN KEY (according_to_id) REFERENCES reference (id),
-  FOREIGN KEY (status_id) REFERENCES taxonomic_status (id)
+  modified_by TEXT
 );
 
 CREATE TABLE vernacular (
-  taxon_id TEXT, -- ref taxon
-  source_id TEXT, -- ref source
+  taxon_id TEXT REFERENCES taxon,
+  source_id TEXT REFERENCES source,
   name TEXT,
   transliteration TEXT,
   language TEXT,
   preferred INTEGER, -- bool
   country TEXT,
   area TEXT,
-  sex_id INTEGER, -- ref sex
-  reference_id INTEGER, -- ref reference
+  sex_id TEXT REFERENCES sex,
+  reference_id TEXT REFERENCES reference,
   remarks TEXT,
   modified TEXT,
-  modified_by TEXT,
-  FOREIGN KEY (taxon_id) REFERENCES taxon (id),
-  FOREIGN KEY (source_id) REFERENCES source (id),
-  FOREIGN KEY (sex_id) REFERENCES sex (id),
-  FOREIGN KEY (reference_id) REFERENCES reference (id)
+  modified_by TEXT
 );
 
 CREATE INDEX idx_vernacular_id ON vernacular (taxon_id);
@@ -249,7 +227,7 @@ CREATE INDEX idx_vernacular_id ON vernacular (taxon_id);
 CREATE TABLE reference (
   id TEXT PRIMARY KEY,
   alternative_id TEXT, -- sep by ',', scope:id, id, URI/URN
-  source_id TEXT, -- ref source
+  source_id TEXT REFERENCES source,
   citation TEXT,
   type TEXT,
   -- author/s in format of either
@@ -290,13 +268,12 @@ CREATE TABLE reference (
   link TEXT,
   remarks TEXT,
   modified TEXT,
-  modified_by TEXT,
-  FOREIGN KEY (source_id) REFERENCES source (id)
+  modified_by TEXT
 );
 
 CREATE TABLE author (
   id TEXT PRIMARY KEY,
-  source_id TEXT, -- ref source
+  source_id TEXT REFERENCES source,
   alternative_id TEXT, -- sep by ','
   given TEXT,
   family TEXT,
@@ -304,7 +281,7 @@ CREATE TABLE author (
   suffix TEXT,
   abbreviation_botany TEXT,
   alternative_names TEXT, -- separated by '|'
-  sex_id INTEGER, -- ref sex
+  sex_id TEXT REFERENCES sex,
   country TEXT,
   birth TEXT,
   birth_place TEXT,
@@ -316,54 +293,44 @@ CREATE TABLE author (
   link TEXT,
   remarks TEXT,
   modified TEXT,
-  modified_by TEXT,
-  FOREIGN KEY (source_id) REFERENCES source (id),
-  FOREIGN KEY (sex_id) REFERENCES sex (id)
+  modified_by TEXT
 );
 
 CREATE TABLE name_relation (
-  name_id TEXT NOT NULL, -- ref name
-  related_name_id TEXT, -- ref name
-  source_id TEXT, -- ref source
+  name_id TEXT NOT NULL REFERENCES name,
+  related_name_id TEXT REFERENCES name,
+  source_id TEXT REFERENCES source,
   -- nom_rel_type enum
-  type_id INTEGER NOT NULL, -- nom_rel_type
+  type_id TEXT NOT NULL REFERENCES nom_rel_type,
   -- starting page number for the nomenclatural event
   page INTEGER,
-  reference_id TEXT, -- ref reference
+  reference_id TEXT REFERENCES reference,
   remarks TEXT,
   modified TEXT,
-  modified_by TEXT,
-  FOREIGN KEY (name_id) REFERENCES name (id),
-  FOREIGN KEY (related_name_id) REFERENCES name (id),
-  FOREIGN KEY (source_id) REFERENCES source (id),
-  FOREIGN KEY (type_id) REFERENCES nom_rel_type (id),
-  FOREIGN KEY (reference_id) REFERENCES reference (id)
+  modified_by TEXT
 );
 
 CREATE TABLE type_material (
   id TEXT PRIMARY KEY,
-  source_id TEXT, -- ref source
-  name_id TEXT NOT NULL, -- ref name
+  source_id TEXT REFERENCES source(id),
+  name_id TEXT NOT NULL REFERENCES name(id),
   citation TEXT,
   status TEXT,
   institution_code TEXT,
   catalog_number TEXT,
-  reference_id TEXT, -- ref reference
+  reference_id TEXT REFERENCES reference(id), -- ref reference
   locality TEXT,
   country TEXT,
   latitude REAL,
   longitude REAL,
   altitude INTEGER,
   host TEXT,
-  sex_id INTEGER, -- ref sex
+  sex_id TEXT REFERENCES sex(id),
   date TEXT,
   collector TEXT,
   associated_sequences TEXT,
   link TEXT,
-  remarks TEXT,
-  FOREIGN KEY (name_id) REFERENCES name (id),
-  FOREIGN KEY (reference_id) REFERENCES reference (id),
-  FOREIGN KEY (sex_id) REFERENCES sex (id)
+  remarks TEXT
 );
 
 CREATE TABLE distribution (
@@ -371,14 +338,14 @@ CREATE TABLE distribution (
   source_id TEXT,
   area TEXT NOT NULL,
   area_id TEXT,
-  gazetteer TEXT,
-  status TEXT,
-  reference_id TEXT,
+  gazetteer_id TEXT REFERENCES gazetteer(id),
+  status_id TEXT REFERENCES distribution_status(id),
+  reference_id TEXT REFERENCES reference(id),
   remarks TEXT
 );
 
 CREATE TABLE media (
-  taxon_id TEXT NOT NULL REFERENCES name_usage,
+  taxon_id TEXT NOT NULL REFERENCES taxon(id),
   source_id TEXT,
   url TEXT NOT NULL,
   type TEXT,
@@ -429,9 +396,9 @@ CREATE TABLE species_interaction (
 );
 
 CREATE TABLE taxon_concept_relation (
-  taxon_id TEXT NOT NULL,
+  taxon_id TEXT NOT NULL REFERENCES taxon,
   related_taxon_id TEXT,
-  source_id TEXT,
+  source_id TEXT REFERENCES source,
   type TEXT NOT NULL,
   reference_id TEXT,
   remarks TEXT
@@ -451,7 +418,7 @@ VALUES
   ('Virus'),
   ('Zoological');
 
-CREATE TABLE name_part (id TEXTZ PRIMARY KEY);
+CREATE TABLE name_part (id TEXT PRIMARY KEY);
 
 INSERT INTO
   name_part (id)
@@ -475,9 +442,19 @@ CREATE TABLE sex (id TEXT PRIMARY KEY);
 INSERT INTO
   sex (id)
 VALUES
-  ('Female'),
   ('Male'),
+  ('Female'),
   ('Hermaphrodite');
+
+CREATE TABLE distribution_status (id TEXT PRIMARY KEY);
+
+INSERT INTO
+  distribution_status (id)
+VALUES
+  ('Native'),
+  ('Domesticated'),
+  ('Alien'),
+  ('Uncertain');
 
 CREATE TABLE nom_rel_type (id TEXT PRIMARY KEY);
 
@@ -684,14 +661,15 @@ VALUES
 ('Mutatio', 'mutatio', 'mutatios', 'mut.', 83, 0, 0, 0, 1, 0, 0, 0, 0, 0),
 ('Strain', 'strain', 'strains', 'strain', 83, 0, 0, 0, 1, 0, 0, 0, 0, 0),
 ('Other', 'other', '', '', 112, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-('Unranked', 'unranked', '', '', 113, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+('Unranked', 'unranked', '', '', 113, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+
 CREATE TABLE geo_time (id TEXT PRIMARY KEY, parent_id INTEGER, name TEXT, type TEXT, start REAL, END REAL);
 
 INSERT INTO
   geo_time (id, name, type, start, END, parent_id)
 VALUES
   ('Hadean', 'Hadean', 'eon', 4567.0, 4000.0, 2),
-  ('Precambrian', 'Precambrian', 'supereon', 4567.0, 541.0,),
+  ('Precambrian', 'Precambrian', 'supereon', 4567.0, 541.0, 0),
   ('Archean', 'Archean', 'eon', 4000.0, 2500.0, 2),
   ('Eoarchean', 'Eoarchean', 'era', 4000.0, 3600.0, 3),
   ('Paleoarchean', 'Paleoarchean', 'era', 3600.0, 3200.0, 3),
@@ -714,7 +692,7 @@ VALUES
   ('Cambrian', 'Cambrian', 'period', 541.0, 485.4, 24),
   ('Fortunian', 'Fortunian', 'age', 541.0, 529.0, 26),
   ('Paleozoic', 'Paleozoic', 'era', 541.0, 251.902, 25),
-  ('Phanerozoic', 'Phanerozoic', 'eon', 541.0, 0.0,),
+  ('Phanerozoic', 'Phanerozoic', 'eon', 541.0, 0.0, 0),
   ('Terreneuvian', 'Terreneuvian', 'epoch', 541.0, 521.0, 22),
   ('CambrianStage2', 'CambrianStage', 'age', 529.0, 521.0, 26),
   ('CambrianSeries2', 'CambrianSeries', 'epoch', 521.0, 509.0, 22),
