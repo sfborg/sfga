@@ -7,104 +7,104 @@ CREATE TABLE version (id);
 INSERT INTO
   version
 VALUES
-  ('v0.3.9');
+  ('v0.3.10');
 
 -- Metadata start
 CREATE TABLE metadata (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  doi TEXT,
+  doi TEXT DEFAULT '',
   title TEXT NOT NULL,
-  alias TEXT,
-  description TEXT,
-  issued TEXT,
-  version TEXT,
-  keywords TEXT,
-  geographic_scope TEXT,
-  taxonomic_scope TEXT,
-  temporal_scope TEXT,
-  confidence INTEGER,
-  completeness INTEGER,
-  license TEXT,
-  url TEXT,
-  logo TEXT,
-  label TEXT,
-  citation TEXT,
-  private INTEGER
+  alias TEXT DEFAULT '',
+  description TEXT DEFAULT '',
+  issued TEXT DEFAULT '',
+  version TEXT DEFAULT '',
+  keywords TEXT DEFAULT '',
+  geographic_scope TEXT DEFAULT '',
+  taxonomic_scope TEXT DEFAULT '',
+  temporal_scope TEXT DEFAULT '',
+  confidence INTEGER DEFAULT 0,
+  completeness INTEGER DEFAULT 0,
+  license TEXT DEFAULT '',
+  url TEXT DEFAULT '',
+  logo TEXT DEFAULT '',
+  label TEXT DEFAULT '',
+  citation TEXT DEFAULT '',
+  private INTEGER DEFAULT 0
 );
 
 CREATE TABLE contact (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  metadata_id INTEGER,
-  orcid TEXT,
+  metadata_id INTEGER DEFAULT 0,
+  orcid TEXT DEFAULT '',
   given TEXT NOT NULL,
   family TEXT NOT NULL,
-  rorid TEXT,
-  organisation TEXT,
+  rorid TEXT DEFAULT '',
+  organisation TEXT DEFAULT '',
   email TEXT NOT NULL,
-  url TEXT,
-  note TEXT
+  url TEXT DEFAULT '',
+  note TEXT DEFAULT ''
 );
 
 CREATE TABLE editor (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  metadata_id INTEGER,
-  orcid TEXT,
+  metadata_id INTEGER DEFAULT 0,
+  orcid TEXT DEFAULT '',
   given TEXT NOT NULL,
   family TEXT NOT NULL,
-  rorid TEXT,
-  organisation TEXT,
-  email TEXT,
-  url TEXT,
-  note TEXT
+  rorid TEXT DEFAULT '',
+  organisation TEXT DEFAULT '',
+  email TEXT DEFAULT '',
+  url TEXT DEFAULT '',
+  note TEXT DEFAULT ''
 );
 
 CREATE TABLE creator (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  metadata_id INTEGER,
-  orcid TEXT,
+  metadata_id INTEGER DEFAULT 0,
+  orcid TEXT DEFAULT '',
   given TEXT NOT NULL,
   family TEXT NOT NULL,
-  rorid TEXT,
-  organisation TEXT,
-  email TEXT,
-  url TEXT,
-  note TEXT
+  rorid TEXT DEFAULT '',
+  organisation TEXT DEFAULT '',
+  email TEXT DEFAULT '',
+  url TEXT DEFAULT '',
+  note TEXT DEFAULT ''
 );
 
 CREATE TABLE publisher (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  metadata_id INTEGER,
-  orcid TEXT,
-  given TEXT,
-  family TEXT,
-  rorid TEXT,
-  organisation TEXT,
-  email TEXT,
-  url TEXT,
-  note TEXT
+  metadata_id INTEGER DEFAULT 0,
+  orcid TEXT DEFAULT '',
+  given TEXT DEFAULT '',
+  family TEXT DEFAULT '',
+  rorid TEXT DEFAULT '',
+  organisation TEXT DEFAULT '',
+  email TEXT DEFAULT '',
+  url TEXT DEFAULT '',
+  note TEXT DEFAULT ''
 );
 
 CREATE TABLE contributor (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  metadata_id INTEGER,
-  orcid TEXT,
+  metadata_id INTEGER DEFAULT 0,
+  orcid TEXT DEFAULT '',
   given TEXT NOT NULL,
   family TEXT NOT NULL,
-  rorid TEXT,
-  organisation TEXT,
-  email TEXT,
-  url TEXT,
-  note TEXT
+  rorid TEXT DEFAULT '',
+  organisation TEXT DEFAULT '',
+  email TEXT DEFAULT '',
+  url TEXT DEFAULT '',
+  note TEXT DEFAULT ''
 );
 
 CREATE TABLE source (
   id TEXT PRIMARY KEY,
-  metadata_id INTEGER,
-  type TEXT,
-  title TEXT,
-  authors TEXT,
-  issued TEXT,
-  isbn TEXT
+  metadata_id INTEGER DEFAULT 0,
+  type TEXT DEFAULT '',
+  title TEXT DEFAULT '',
+  authors TEXT DEFAULT '',
+  issued TEXT DEFAULT '',
+  isbn TEXT DEFAULT ''
 );
 
 -- Metadata end
@@ -112,85 +112,85 @@ CREATE TABLE source (
 -- Data start
 CREATE TABLE taxon (
   id TEXT PRIMARY KEY,
-  alternative_id TEXT,
+  alternative_id TEXT DEFAULT '',
   source_id TEXT REFERENCES source,
   parent_id TEXT REFERENCES taxon,
-  ordinal INTEGER,
-  branch_length INTEGER,
+  ordinal INTEGER DEFAULT 0,
+  branch_length INTEGER DEFAULT 0,
   name_id TEXT NOT NULL REFERENCES name,
-  name_phrase TEXT,
+  name_phrase TEXT DEFAULT '',
   according_to_id TEXT REFERENCES reference,
-  according_to_page TEXT,
-  according_to_page_link TEXT,
-  scrutinizer TEXT,
-  scrutinizer_id TEXT, -- ORCID usually
-  scrutinizer_date TEXT,
-  provisional INTEGER, -- bool
-  reference_id TEXT, -- list of references about the taxon hypothesis
-  extinct INTEGER, -- bool
+  according_to_page TEXT DEFAULT '',
+  according_to_page_link TEXT DEFAULT '',
+  scrutinizer TEXT DEFAULT '',
+  scrutinizer_id TEXT DEFAULT '', -- ORCID usually
+  scrutinizer_date TEXT DEFAULT '',
+  provisional INTEGER DEFAULT 0, -- bool
+  reference_id TEXT DEFAULT '', -- list of references about the taxon hypothesis
+  extinct INTEGER DEFAULT 0, -- bool
   temporal_range_start_id TEXT REFERENCES geo_time,
   temporal_range_end_id TEXT REFERENCES geo_time,
-  environment_id TEXT, -- environment ids sep by ','
-  species TEXT,
-  section TEXT,
-  subgenus TEXT,
-  subtribe TEXT,
-  tribe TEXT,
-  subfamily TEXT,
-  family TEXT,
-  supberfamily TEXT,
-  suborder TEXT,
-  "order" TEXT,
-  subclass TEXT,
-  class TEXT,
-  subphylum TEXT,
-  phylum TEXT,
-  kingdom TEXT,
-  link TEXT,
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  environment_id TEXT DEFAULT '', -- environment ids sep by ','
+  species TEXT DEFAULT '',
+  section TEXT DEFAULT '',
+  subgenus TEXT DEFAULT '',
+  subtribe TEXT DEFAULT '',
+  tribe TEXT DEFAULT '',
+  subfamily TEXT DEFAULT '',
+  family TEXT DEFAULT '',
+  supberfamily TEXT DEFAULT '',
+  suborder TEXT DEFAULT '',
+  "order" TEXT DEFAULT '',
+  subclass TEXT DEFAULT '',
+  class TEXT DEFAULT '',
+  subphylum TEXT DEFAULT '',
+  phylum TEXT DEFAULT '',
+  kingdom TEXT DEFAULT '',
+  link TEXT DEFAULT '',
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 CREATE TABLE name (
   id TEXT PRIMARY KEY,
-  alternative_id TEXT,
-  source_id TEXT,
-  -- basionym_id TEXT, -- use nom_rel_type instead
+  alternative_id TEXT DEFAULT '',
+  source_id TEXT DEFAULT '',
+  -- basionym_id TEXT DEFAULT '', -- use nom_rel_type instead
   scientific_name TEXT NOT NULL, -- full canonical form
-  authorship TEXT, -- verbatim authorship
+  authorship TEXT DEFAULT '', -- verbatim authorship
   rank_id INTEGER REFERENCES rank,
-  uninomial TEXT,
-  genus TEXT,
-  infrageneric_epithet TEXT,
-  specific_epithet TEXT,
-  infraspecific_epithet TEXT,
-  cultivar_epithet TEXT,
-  notho_id TEXT, -- ref name_part
-  original_spelling INTEGER, -- bool
-  combination_authorship TEXT, -- separated by '|'
-  combination_authorship_id TEXT, -- separated by '|'
-  combination_ex_authorship TEXT, -- separated by '|'
-  combination_ex_authorship_id TEXT, -- separated by '|'
-  combination_authorship_year TEXT,
-  basionym_authorship TEXT, -- separated by '|'
-  basionym_authorship_id TEXT, -- separated by '|'
-  basionym_ex_authorship TEXT, -- separated by '|'
-  basionym_ex_authorship_id TEXT, -- separated by '|'
-  basionym_authorship_year TEXT,
+  uninomial TEXT DEFAULT '',
+  genus TEXT DEFAULT '',
+  infrageneric_epithet TEXT DEFAULT '',
+  specific_epithet TEXT DEFAULT '',
+  infraspecific_epithet TEXT DEFAULT '',
+  cultivar_epithet TEXT DEFAULT '',
+  notho_id TEXT DEFAULT '', -- ref name_part
+  original_spelling INTEGER DEFAULT 0, -- bool
+  combination_authorship TEXT DEFAULT '', -- separated by '|'
+  combination_authorship_id TEXT DEFAULT '', -- separated by '|'
+  combination_ex_authorship TEXT DEFAULT '', -- separated by '|'
+  combination_ex_authorship_id TEXT DEFAULT '', -- separated by '|'
+  combination_authorship_year TEXT DEFAULT '',
+  basionym_authorship TEXT DEFAULT '', -- separated by '|'
+  basionym_authorship_id TEXT DEFAULT '', -- separated by '|'
+  basionym_ex_authorship TEXT DEFAULT '', -- separated by '|'
+  basionym_ex_authorship_id TEXT DEFAULT '', -- separated by '|'
+  basionym_authorship_year TEXT DEFAULT '',
   code_id TEXT REFERENCES nom_code,
   status_id TEXT REFERENCES nom_status,
-  reference_id TEXT, -- refs about taxon sep ','
-  published_in_year TEXT,
-  published_in_page TEXT,
-  published_in_page_link TEXT,
+  reference_id TEXT DEFAULT '', -- refs about taxon sep ','
+  published_in_year TEXT DEFAULT '',
+  published_in_page TEXT DEFAULT '',
+  published_in_page_link TEXT DEFAULT '',
   gender_id TEXT REFERENCES gender,
-  gender_agreement INTEGER, -- bool
-  etymology TEXT,
-  link TEXT,
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  gender_agreement INTEGER DEFAULT 0, -- bool
+  etymology TEXT DEFAULT '',
+  link TEXT DEFAULT '',
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 CREATE TABLE synonym (
@@ -198,104 +198,104 @@ CREATE TABLE synonym (
   taxon_id TEXT NOT NULL REFERENCES taxon,
   source_id TEXT REFERENCES source,
   name_id TEXT NOT NULL REFERENCES name,
-  name_phrase TEXT,
+  name_phrase TEXT DEFAULT '',
   according_to_id TEXT REFERENCES reference,
   status_id TEXT REFERENCES taxonomic_status,
-  reference_id TEXT, -- ids, sep by ',' about this synonym
-  link TEXT,
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  reference_id TEXT DEFAULT '', -- ids, sep by ',' about this synonym
+  link TEXT DEFAULT '',
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 CREATE TABLE vernacular (
   taxon_id TEXT NOT NULL REFERENCES taxon,
   source_id TEXT REFERENCES source,
   name TEXT NOT NULL,
-  transliteration TEXT,
-  language TEXT,
-  preferred INTEGER, -- bool
-  country TEXT,
-  area TEXT,
+  transliteration TEXT DEFAULT '',
+  language TEXT DEFAULT '',
+  preferred INTEGER DEFAULT 0, -- bool
+  country TEXT DEFAULT '',
+  area TEXT DEFAULT '',
   sex_id TEXT REFERENCES sex,
   reference_id TEXT REFERENCES reference,
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 CREATE INDEX idx_vernacular_id ON vernacular (taxon_id);
 
 CREATE TABLE reference (
   id TEXT PRIMARY KEY,
-  alternative_id TEXT, -- sep by ',', scope:id, id, URI/URN
+  alternative_id TEXT DEFAULT '', -- sep by ',', scope:id, id, URI/URN
   source_id TEXT REFERENCES source,
-  citation TEXT,
-  type TEXT,
+  citation TEXT DEFAULT '',
+  type TEXT DEFAULT '',
   -- author/s in format of either
   -- amily1, given1; family2, given2; ..
   -- or
   -- given1 family1, given2 family2, ...
-  author TEXT,
-  author_id TEXT, -- 'ref' author, sep ','
-  editor TEXT, -- 'ref' author, sep ','
-  editor_id TEXT, -- 'ref' author, sep ','
-  title TEXT,
-  title_short TEXT,
+  author TEXT DEFAULT '',
+  author_id TEXT DEFAULT '', -- 'ref' author, sep ','
+  editor TEXT DEFAULT '', -- 'ref' author, sep ','
+  editor_id TEXT DEFAULT '', -- 'ref' author, sep ','
+  title TEXT DEFAULT '',
+  title_short TEXT DEFAULT '',
   -- container_author is an author or a parent volume (book, journal) 
-  container_author TEXT,
+  container_author TEXT DEFAULT '',
   -- container_title of the parent container
-  container_title TEXT,
+  container_title TEXT DEFAULT '',
   -- container_title_short of the parent container
-  container_title_short TEXT,
-  issued TEXT, -- yyyy-mm-dd
-  accessed TEXT, -- yyyy-mm-dd
+  container_title_short TEXT DEFAULT '',
+  issued TEXT DEFAULT '', -- yyyy-mm-dd
+  accessed TEXT DEFAULT '', -- yyyy-mm-dd
   -- collection_title of the parent volume
-  collection_title TEXT,
+  collection_title TEXT DEFAULT '',
   -- collection_editor of the parent volume
-  collection_editor TEXT,
-  volume TEXT,
-  issue TEXT,
+  collection_editor TEXT DEFAULT '',
+  volume TEXT DEFAULT '',
+  issue TEXT DEFAULT '',
   -- edition number
-  edition TEXT,
+  edition TEXT DEFAULT '',
   -- page number
-  page INTEGER,
-  publisher TEXT,
-  publisher_place TEXT,
+  page INTEGER DEFAULT 0,
+  publisher TEXT DEFAULT '',
+  publisher_place TEXT DEFAULT '',
   -- version of the reference
-  version TEXT,
-  isbn TEXT,
-  issn TEXT,
-  doi TEXT,
-  link TEXT,
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  version TEXT DEFAULT '',
+  isbn TEXT DEFAULT '',
+  issn TEXT DEFAULT '',
+  doi TEXT DEFAULT '',
+  link TEXT DEFAULT '',
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 CREATE TABLE author (
   id TEXT PRIMARY KEY,
   source_id TEXT REFERENCES source,
-  alternative_id TEXT, -- sep by ','
-  given TEXT,
+  alternative_id TEXT DEFAULT '', -- sep by ','
+  given TEXT DEFAULT '',
   family TEXT NOT NULL,
   -- f. for filius,  Jr., etc
-  suffix TEXT,
-  abbreviation_botany TEXT,
-  alternative_names TEXT, -- separated by '|'
+  suffix TEXT DEFAULT '',
+  abbreviation_botany TEXT DEFAULT '',
+  alternative_names TEXT DEFAULT '', -- separated by '|'
   sex_id TEXT REFERENCES sex,
-  country TEXT,
-  birth TEXT,
-  birth_place TEXT,
-  death TEXT,
-  affiliation TEXT,
-  interest TEXT,
-  reference_id TEXT, -- sep by ','
+  country TEXT DEFAULT '',
+  birth TEXT DEFAULT '',
+  birth_place TEXT DEFAULT '',
+  death TEXT DEFAULT '',
+  affiliation TEXT DEFAULT '',
+  interest TEXT DEFAULT '',
+  reference_id TEXT DEFAULT '', -- sep by ','
   -- url
-  link TEXT,
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  link TEXT DEFAULT '',
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 CREATE TABLE name_relation (
@@ -305,65 +305,65 @@ CREATE TABLE name_relation (
   -- nom_rel_type enum
   type_id TEXT NOT NULL REFERENCES nom_rel_type,
   -- starting page number for the nomenclatural event
-  page INTEGER,
+  page INTEGER DEFAULT 0,
   reference_id TEXT REFERENCES reference,
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 CREATE TABLE type_material (
   id TEXT PRIMARY KEY,
   source_id TEXT REFERENCES source,
   name_id TEXT NOT NULL REFERENCES name,
-  citation TEXT,
-  status TEXT,
-  institution_code TEXT,
-  catalog_number TEXT,
+  citation TEXT DEFAULT '',
+  status TEXT DEFAULT '',
+  institution_code TEXT DEFAULT '',
+  catalog_number TEXT DEFAULT '',
   reference_id TEXT REFERENCES reference,
-  locality TEXT,
-  country TEXT,
-  latitude REAL,
-  longitude REAL,
-  altitude INTEGER,
-  host TEXT,
+  locality TEXT DEFAULT '',
+  country TEXT DEFAULT '',
+  latitude REAL DEFAULT 0,
+  longitude REAL DEFAULT 0,
+  altitude INTEGER DEFAULT 0,
+  host TEXT DEFAULT '',
   sex_id TEXT REFERENCES sex,
-  date TEXT,
-  collector TEXT,
-  associated_sequences TEXT,
-  link TEXT,
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  date TEXT DEFAULT '',
+  collector TEXT DEFAULT '',
+  associated_sequences TEXT DEFAULT '',
+  link TEXT DEFAULT '',
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 CREATE TABLE distribution (
   taxon_id TEXT NOT NULL,
-  source_id TEXT,
-  area TEXT,
-  area_id TEXT,
+  source_id TEXT DEFAULT '',
+  area TEXT DEFAULT '',
+  area_id TEXT DEFAULT '',
   gazetteer_id TEXT REFERENCES gazetteer,
   status_id TEXT REFERENCES distribution_status,
   reference_id TEXT REFERENCES reference,
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 CREATE TABLE media (
   taxon_id TEXT NOT NULL REFERENCES taxon,
   source_id TEXT REFERENCES source,
   url TEXT NOT NULL,
-  type TEXT, -- MIME type
-  format TEXT,
-  title TEXT,
-  created TEXT,
-  creator TEXT,
-  license TEXT,
-  link TEXT,
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  type TEXT DEFAULT '', -- MIME type
+  format TEXT DEFAULT '',
+  title TEXT DEFAULT '',
+  created TEXT DEFAULT '',
+  creator TEXT DEFAULT '',
+  license TEXT DEFAULT '',
+  link TEXT DEFAULT '',
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 -- treatment files are on file system.
@@ -371,9 +371,9 @@ CREATE TABLE treatment (
   taxon_id TEXT NOT NULL REFERENCES taxon,
   source_id TEXT REFERENCES source,
   document TEXT NOT NULL,
-  format TEXT, -- HTML, XML, TXT
-  modified TEXT,
-  modified_by TEXT
+  format TEXT DEFAULT '', -- HTML, XML, TXT
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 CREATE TABLE species_estimate (
@@ -382,9 +382,9 @@ CREATE TABLE species_estimate (
   estimate INTEGER NOT NULL, -- estimated number of species
   type TEXT NOT NULL REFERENCES estimate_type,
   reference_id TEXT REFERENCES reference,
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 -- for arbitrary properties assigned to taxon
@@ -394,23 +394,23 @@ CREATE TABLE taxon_property (
   property TEXT NOT NULL, -- name of the property
   value TEXT NOT NULL,
   reference_id TEXT REFERENCES reference,
-  page INTEGER,
-  ordinal INTEGER, -- sorting value
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  page INTEGER DEFAULT 0,
+  ordinal INTEGER DEFAULT 0, -- sorting value
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 CREATE TABLE species_interaction (
   taxon_id TEXT NOT NULL,
-  related_taxon_id TEXT,
-  source_id TEXT,
-  related_taxon_scientific_name TEXT,
+  related_taxon_id TEXT DEFAULT '',
+  source_id TEXT DEFAULT '',
+  related_taxon_scientific_name TEXT DEFAULT '',
   type TEXT NOT NULL REFERENCES species_interaction_type,
   reference_id TEXT REFERENCES reference,
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 CREATE TABLE taxon_concept_relation (
@@ -418,10 +418,10 @@ CREATE TABLE taxon_concept_relation (
   related_taxon_id TEXT NOT NULL,
   source_id TEXT REFERENCES source,
   type TEXT NOT NULL,
-  reference_id TEXT,
-  remarks TEXT,
-  modified TEXT,
-  modified_by TEXT
+  reference_id TEXT DEFAULT '',
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
 );
 
 -- ENUMS --
@@ -525,12 +525,12 @@ VALUES
 
 CREATE TABLE taxonomic_status (
   id TEXT PRIMARY KEY,
-  value TEXT,
-  name TEXT,
-  bare_name INTEGER, -- bool
-  description TEXT,
-  majorStatus TEXT,
-  synonym INTEGER, -- bool
+  value TEXT DEFAULT '',
+  name TEXT DEFAULT '',
+  bare_name INTEGER DEFAULT 0, -- bool
+  description TEXT DEFAULT '',
+  majorStatus TEXT DEFAULT '',
+  synonym INTEGER DEFAULT 0, -- bool
   taxon INTEGER -- bool
 );
 
@@ -557,9 +557,9 @@ CREATE TABLE species_interaction_type (
 id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   inverse TEXT REFERENCES species_interaction_type,
-  superTypes TEXT, -- ids sep ','
-  obo TEXT,
-  symmetrical INTEGER, -- bool
+  superTypes TEXT DEFAULT '', -- ids sep ','
+  obo TEXT DEFAULT '',
+  symmetrical INTEGER DEFAULT 0, -- bool
   description TEXT
 );
 
@@ -614,8 +614,8 @@ VALUES
 
 CREATE TABLE taxon_concept_rel_type (
   id TEXT PRIMARY KEY,
-  name TEXT,
-  rcc5 TEXT,
+  name TEXT DEFAULT '',
+  rcc5 TEXT DEFAULT '',
   description TEXT
 );
 
@@ -631,19 +631,19 @@ VALUES
 
 CREATE TABLE rank(
   id TEXT PRIMARY KEY,
-  name TEXT,
-  plural TEXT,
-  marker TEXT,
+  name TEXT DEFAULT '',
+  plural TEXT DEFAULT '',
+  marker TEXT DEFAULT '',
   major_rank_id TEXT REFERENCES rank,
-  ambiguous_marker INTEGER, -- bool
-  family_group INTEGER, -- bool
-  genus_group INTEGER, -- bool
-  infraspecific INTEGER, -- bool
-  legacy INTEGER, -- bool
-  linnean INTEGER, -- bool
-  suprageneric INTEGER, -- bool
-  supraspecific INTEGER, -- bool
-  uncomparable INTEGER -- bool
+  ambiguous_marker INTEGER DEFAULT 0, -- bool
+  family_group INTEGER DEFAULT 0, -- bool
+  genus_group INTEGER DEFAULT 0, -- bool
+  infraspecific INTEGER DEFAULT 0, -- bool
+  legacy INTEGER DEFAULT 0, -- bool
+  linnean INTEGER DEFAULT 0, -- bool
+  suprageneric INTEGER DEFAULT 0, -- bool
+  supraspecific INTEGER DEFAULT 0, -- bool
+  uncomparable INTEGER DEFAULT 0 -- bool
 );
 
 
@@ -784,9 +784,9 @@ VALUES
 CREATE TABLE geo_time (
   id TEXT PRIMARY KEY,
   parent_id TEXT REFERENCES geo_time,
-  name TEXT,
-  type TEXT,
-  start REAL,
+  name TEXT DEFAULT '',
+  type TEXT DEFAULT '',
+  start REAL DEFAULT 0,
   end REAL);
 
 INSERT INTO
