@@ -7,7 +7,7 @@ CREATE TABLE version (id);
 INSERT INTO
   version
 VALUES
-  ('v0.3.10');
+  ('v0.3.9');
 
 -- Metadata start
 CREATE TABLE metadata (
