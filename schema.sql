@@ -13,7 +13,7 @@ VALUES
 CREATE TABLE metadata (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   doi TEXT,
-  title TEXT,
+  title TEXT NOT NULL,
   alias TEXT,
   description TEXT,
   issued TEXT,
@@ -36,11 +36,11 @@ CREATE TABLE contact (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   metadata_id INTEGER,
   orcid TEXT,
-  given TEXT,
-  family TEXT,
+  given TEXT NOT NULL,
+  family TEXT NOT NULL,
   rorid TEXT,
-  name TEXT,
-  email TEXT,
+  organisation TEXT,
+  email TEXT NOT NULL,
   url TEXT,
   note TEXT
 );
@@ -49,10 +49,10 @@ CREATE TABLE editor (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   metadata_id INTEGER,
   orcid TEXT,
-  given TEXT,
-  family TEXT,
+  given TEXT NOT NULL,
+  family TEXT NOT NULL,
   rorid TEXT,
-  name TEXT,
+  organisation TEXT,
   email TEXT,
   url TEXT,
   note TEXT
@@ -62,10 +62,10 @@ CREATE TABLE creator (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   metadata_id INTEGER,
   orcid TEXT,
-  given TEXT,
-  family TEXT,
+  given TEXT NOT NULL,
+  family TEXT NOT NULL,
   rorid TEXT,
-  name TEXT,
+  organisation TEXT,
   email TEXT,
   url TEXT,
   note TEXT
@@ -78,7 +78,7 @@ CREATE TABLE publisher (
   given TEXT,
   family TEXT,
   rorid TEXT,
-  name TEXT,
+  organisation TEXT,
   email TEXT,
   url TEXT,
   note TEXT
@@ -88,10 +88,10 @@ CREATE TABLE contributor (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   metadata_id INTEGER,
   orcid TEXT,
-  given TEXT,
-  family TEXT,
+  given TEXT NOT NULL,
+  family TEXT NOT NULL,
   rorid TEXT,
-  name TEXT,
+  organisation TEXT,
   email TEXT,
   url TEXT,
   note TEXT
@@ -117,13 +117,13 @@ CREATE TABLE taxon (
   parent_id TEXT REFERENCES taxon,
   ordinal INTEGER,
   branch_length INTEGER,
-  name_id TEXT REFERENCES name,
+  name_id TEXT NOT NULL REFERENCES name,
   name_phrase TEXT,
   according_to_id TEXT REFERENCES reference,
   according_to_page TEXT,
   according_to_page_link TEXT,
   scrutinizer TEXT,
-  scrutinizer_id TEXT, -- ORIC usually
+  scrutinizer_id TEXT, -- ORCID usually
   scrutinizer_date TEXT,
   provisional INTEGER, -- bool
   reference_id TEXT, -- list of references about the taxon hypothesis
@@ -156,8 +156,8 @@ CREATE TABLE name (
   id TEXT PRIMARY KEY,
   alternative_id TEXT,
   source_id TEXT,
-  basionym_id TEXT, -- use nom_rel_type instead
-  scientific_name TEXT, -- full canonical form
+  -- basionym_id TEXT, -- use nom_rel_type instead
+  scientific_name TEXT NOT NULL, -- full canonical form
   authorship TEXT, -- verbatim authorship
   rank_id INTEGER REFERENCES rank,
   uninomial TEXT,
@@ -180,7 +180,7 @@ CREATE TABLE name (
   basionym_authorship_year TEXT,
   code_id TEXT REFERENCES nom_code,
   status_id TEXT REFERENCES nom_status,
-  reference_id TEXT,
+  reference_id TEXT, -- refs about taxon sep ','
   published_in_year TEXT,
   published_in_page TEXT,
   published_in_page_link TEXT,
@@ -195,9 +195,9 @@ CREATE TABLE name (
 
 CREATE TABLE synonym (
   id TEXT PRIMARY KEY,
-  taxon_id TEXT REFERENCES taxon,
+  taxon_id TEXT NOT NULL REFERENCES taxon,
   source_id TEXT REFERENCES source,
-  name_id TEXT REFERENCES name,
+  name_id TEXT NOT NULL REFERENCES name,
   name_phrase TEXT,
   according_to_id TEXT REFERENCES reference,
   status_id TEXT REFERENCES taxonomic_status,
@@ -209,9 +209,9 @@ CREATE TABLE synonym (
 );
 
 CREATE TABLE vernacular (
-  taxon_id TEXT REFERENCES taxon,
+  taxon_id TEXT NOT NULL REFERENCES taxon,
   source_id TEXT REFERENCES source,
-  name TEXT,
+  name TEXT NOT NULL,
   transliteration TEXT,
   language TEXT,
   preferred INTEGER, -- bool
@@ -278,7 +278,7 @@ CREATE TABLE author (
   source_id TEXT REFERENCES source,
   alternative_id TEXT, -- sep by ','
   given TEXT,
-  family TEXT,
+  family TEXT NOT NULL,
   -- f. for filius,  Jr., etc
   suffix TEXT,
   abbreviation_botany TEXT,
@@ -300,7 +300,7 @@ CREATE TABLE author (
 
 CREATE TABLE name_relation (
   name_id TEXT NOT NULL REFERENCES name,
-  related_name_id TEXT REFERENCES name,
+  related_name_id TEXT NOT NULL REFERENCES name,
   source_id TEXT REFERENCES source,
   -- nom_rel_type enum
   type_id TEXT NOT NULL REFERENCES nom_rel_type,
@@ -340,7 +340,7 @@ CREATE TABLE type_material (
 CREATE TABLE distribution (
   taxon_id TEXT NOT NULL,
   source_id TEXT,
-  area TEXT NOT NULL,
+  area TEXT,
   area_id TEXT,
   gazetteer_id TEXT REFERENCES gazetteer,
   status_id TEXT REFERENCES distribution_status,
@@ -415,7 +415,7 @@ CREATE TABLE species_interaction (
 
 CREATE TABLE taxon_concept_relation (
   taxon_id TEXT NOT NULL REFERENCES taxon,
-  related_taxon_id TEXT,
+  related_taxon_id TEXT NOT NULL,
   source_id TEXT REFERENCES source,
   type TEXT NOT NULL,
   reference_id TEXT,
@@ -545,6 +545,7 @@ INSERT INTO
     taxon
   )
 VALUES
+('', '', 0, '', '', 0, 0),
 ('ACCEPTED', 'accepted', 0, 'A taxonomically accepted, current name', 'ACCEPTED', 0, 1),
 ('PROVISIONALLY_ACCEPTED', 'provisionally accepted', 0, 'Treated as accepted, but doubtful whether this is correct.', 'ACCEPTED', 0, 1),
 ('SYNONYM', 'synonym', 0, 'Names which point unambiguously at one species (not specifying whether homo- or heterotypic).Synonyms, in the CoL sense, include also orthographic variants and published misspellings.', 'SYNONYM', 1, 0),
@@ -566,6 +567,7 @@ INSERT INTO species_interaction_type (
   id, name, inverse, superTypes, obo, symmetrical, description
 )
 VALUES
+('', '', '', '', '', 0, ''),
 ('MUTUALIST_OF', 'mutualist of', 'MUTUALIST_OF', 'SYMBIONT_OF', 'http://purl.obolibrary.org/obo/RO_0002442', 1, 'An interaction relationship between two organisms living together in more or less intimate association in a relationship in which both organisms benefit from each other (GO).'),
 ('COMMENSALIST_OF', 'commensalist of', 'COMMENSALIST_OF', 'SYMBIONT_OF', 'http://purl.obolibrary.org/obo/RO_0002441', 1, 'An interaction relationship between two organisms living together in more or less intimate association in a relationship in which one benefits and the other is unaffected (GO).'),
 ('HAS_EPIPHYTE', 'has epiphyte', 'EPIPHYTE_OF', 'SYMBIONT_OF', 'http://purl.obolibrary.org/obo/RO_0008502', 0, 'Inverse of epiphyte of'),
@@ -620,6 +622,7 @@ CREATE TABLE taxon_concept_rel_type (
 INSERT INTO
   taxon_concept_rel_type (id, name, rcc5, description)
 VALUES
+('', '', '', ''),
 ('EQUALS', 'equals', 'equal (EQ)', 'The circumscription of this taxon is (essentially) identical to the related taxon.'),
 ('INCLUDES', 'includes', 'proper part inverse (PPi)', 'The related taxon concept is a subset of this taxon concept.'),
 ('INCLUDED_IN', 'included in', 'proper part (PP)', 'This taxon concept is a subset of the related taxon concept.'),
@@ -789,7 +792,7 @@ CREATE TABLE geo_time (
 INSERT INTO
   geo_time (id, name, type, start, end, parent_id)
 VALUES
-('', '', '', null, null, ''),
+('', '', '', 0, 0, ''),
 ('HADEAN', 'Hadean', 'eon', 4567.0, 4000.0, 'PRECAMBRIAN'),
 ('PRECAMBRIAN', 'Precambrian', 'supereon', 4567.0, 541.0, ''),
 ('ARCHEAN', 'Archean', 'eon', 4000.0, 2500.0, 'PRECAMBRIAN'),
