@@ -233,7 +233,7 @@ CREATE TABLE reference (
   citation TEXT DEFAULT '',
   type TEXT DEFAULT '',
   -- author/s in format of either
-  -- amily1, given1; family2, given2; ..
+  -- family1, given1; family2, given2; ..
   -- or
   -- given1 family1, given2 family2, ...
   author TEXT DEFAULT '',
