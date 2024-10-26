@@ -317,7 +317,7 @@ CREATE TABLE type_material (
   source_id TEXT REFERENCES source,
   name_id TEXT NOT NULL REFERENCES name,
   citation TEXT DEFAULT '',
-  status TEXT DEFAULT '',
+  status_id TEXT REFERENCES type_status,
   institution_code TEXT DEFAULT '',
   catalog_number TEXT DEFAULT '',
   reference_id TEXT REFERENCES reference,
@@ -492,6 +492,52 @@ VALUES
   ('ALIEN'),
   ('UNCERTAIN');
 
+CREATE TABLE type_status (
+  id TEXT PRIMARY KEY,
+  name TEXT,
+  root TEXT REFERENCES type_status,
+  "primary" INTEGER, -- bool
+  codes TEXT, -- nom codes sep ',' 
+);
+
+INSERT INTO type_status (id, name, root, codes, primary)
+VALUES
+('', '', '', '', 0),
+('OTHER', 'other', 'OTHER', '', 0),
+('HOMOEOTYPE', 'homoeotype', 'HOMOEOTYPE', 'ZOOLOGICAL', 0),
+('PLESIOTYPE', 'plesiotype', 'PLESIOTYPE', 'ZOOLOGICAL', 0),
+('PLASTOTYPE', 'plastotype', 'PLASTOTYPE', 'BOTANICAL,ZOOLOGICAL', 0),
+('PLASTOSYNTYPE', 'plastosyntype', 'SYNTYPE', 'BOTANICAL,ZOOLOGICAL', 0),
+('PLASTOPARATYPE', 'plastoparatype', 'PARATYPE', 'BOTANICAL,ZOOLOGICAL', 0),
+('PLASTONEOTYPE', 'plastoneotype', 'NEOTYPE', '', 0),
+('PLASTOLECTOTYPE', 'plastolectotype', 'LECTOTYPE', '', 0),
+('PLASTOISOTYPE', 'plastoisotype', 'HOLOTYPE', '', 0),
+('PLASTOHOLOTYPE', 'plastoholotype', 'HOLOTYPE', '', 0),
+('ALLOTYPE', 'allotype', 'PARATYPE', 'ZOOLOGICAL', 0),
+('ALLONEOTYPE', 'alloneotype', 'NEOTYPE', 'ZOOLOGICAL', 0),
+('ALLOLECTOTYPE', 'allolectotype', 'LECTOTYPE', 'ZOOLOGICAL', 0),
+('PARANEOTYPE', 'paraneotype', 'NEOTYPE', 'ZOOLOGICAL', 0),
+('PARALECTOTYPE', 'paralectotype', 'LECTOTYPE', 'ZOOLOGICAL', 0),
+('ISOSYNTYPE', 'isosyntype', 'SYNTYPE', 'BOTANICAL', 0),
+('ISOPARATYPE', 'isoparatype', 'PARATYPE', 'BOTANICAL', 0),
+('ISONEOTYPE', 'isoneotype', 'NEOTYPE', 'BOTANICAL', 0),
+('ISOLECTOTYPE', 'isolectotype', 'LECTOTYPE', 'BOTANICAL', 0),
+('ISOEPITYPE', 'isoepitype', 'EPITYPE', 'BOTANICAL', 0),
+('ISOTYPE', 'isotype', 'HOLOTYPE', 'BOTANICAL', 0),
+('TOPOTYPE', 'topotype', 'TOPOTYPE', 'BOTANICAL,ZOOLOGICAL', 0),
+('SYNTYPE', 'syntype', 'SYNTYPE', 'BOTANICAL,ZOOLOGICAL', 1),
+('PATHOTYPE', 'pathotype', 'PATHOTYPE', 'BACTERIAL', 0),
+('PARATYPE', 'paratype', 'PARATYPE', 'BOTANICAL,ZOOLOGICAL', 1),
+('ORIGINAL_MATERIAL', 'original material', 'ORIGINAL_MATERIAL', 'BOTANICAL', 1),
+('NEOTYPE', 'neotype', 'NEOTYPE', 'BACTERIAL,BOTANICAL,ZOOLOGICAL', 1),
+('LECTOTYPE', 'lectotype', 'LECTOTYPE', 'BACTERIAL,BOTANICAL,ZOOLOGICAL', 1),
+('ICONOTYPE', 'iconotype', 'ICONOTYPE', 'BOTANICAL', 0),
+('HOLOTYPE', 'holotype', 'HOLOTYPE', 'BACTERIAL,BOTANICAL,ZOOLOGICAL', 1),
+('HAPANTOTYPE', 'hapantotype', 'HAPANTOTYPE', 'ZOOLOGICAL', 0),
+('EX_TYPE', 'ex type', 'EX_TYPE', 'BOTANICAL,ZOOLOGICAL', 0),
+('ERGATOTYPE', 'ergatotype', 'ERGATOTYPE', 'ZOOLOGICAL', 0),
+('EPITYPE', 'epitype', 'EPITYPE', 'BOTANICAL', 0),
+
 CREATE TABLE nom_rel_type (id TEXT PRIMARY KEY);
 
 INSERT INTO
@@ -629,6 +675,27 @@ VALUES
 ('OVERLAPS', 'overlaps', 'partially overlapping (PO)', 'Both taxon concepts share some members/children in common, and each contain some members not shared with the other.'),
 ('EXCLUDES', 'excludes', 'disjoint (DR)', 'The related taxon concept is not a subset of this concept.');
 
+CREATE TABLE gazetteer(
+  id TEXT PRIMARY KEY,
+  name TEXT,
+  title TEXT,
+  link TEXT,
+  areaLinkTemplate TEXT,
+  description TEXT,
+);
+
+INSERT into gazetteer ( id, name, title, link, areaLinkTemplate, description)
+VALUES
+('', '', '', '', '', ''),
+('TDWG', 'tdwg', 'World Geographical Scheme for Recording Plant Distributions', 'http://www.tdwg.org/standards/109', '', 'World Geographical Scheme for Recording Plant Distributions published by TDWG at level 1, 2, 3 or 4.  Level 1 = Continents, Level 2 = Regions, Level 3 = Botanical countries, Level 4 = Basic recording units.'),
+('ISO', 'iso', 'ISO 3166 Country Codes', 'https://en.wikipedia.org/wiki/ISO_3166', 'https://www.iso.org/obp/ui/#iso:code:3166:', 'ISO 3166 codes for the representation of names of countries and their subdivisions. Codes for current countries (ISO 3166-1), country subdivisions (ISO 3166-2) and formerly used names of countries (ISO 3166-3). Country codes can be given either as alpha-2, alpha-3 or numeric codes.'),
+('FAO', 'fao', 'FAO Major Fishing Areas', 'http://www.fao.org/fishery/cwp/handbook/H/en', 'https://www.fao.org/fishery/en/area/', 'FAO Major Fishing Areas'),
+('LONGHURST', 'longhurst', 'Longhurst Biogeographical Provinces', 'http://www.marineregions.org/sources.php#longhurst', '', 'Longhurst Biogeographical Provinces, a partition of the world oceans into provinces as defined by Longhurst, A.R. (2006). Ecological Geography of the Sea. 2nd Edition.'),
+('TEOW', 'teow', 'Terrestrial Ecoregions of the World', 'https://www.worldwildlife.org/publications/terrestrial-ecoregions-of-the-world', '', 'Terrestrial Ecoregions of the World is a biogeographic regionalization of the Earth''s terrestrial biodiversity. See Olson et al. 2001. Terrestrial ecoregions of the world: a new map of life on Earth. Bioscience 51(11):933-938.'),
+('IHO', 'iho', 'International Hydrographic Organization See Areas', '', '', 'Sea areas published by the International Hydrographic Organization as boundaries of the major oceans and seas of the world. See Limits of Oceans & Seas, Special Publication No. 23 published by the International Hydrographic Organization in 1953.'),
+('MRGID', 'mrgid', 'Marine Regions Geographic Identifier', 'https://www.marineregions.org/gazetteer.php', 'http://marineregions.org/mrgid/', 'Standard, relational list of geographic names developed by VLIZ covering mainly marine names such as seas, sandbanks, ridges, bays or even standard sampling stations used in marine research.The geographic cover is global; however the gazetteer is focused on the Belgian Continental Shelf, the Scheldt Estuary and the Southern Bight of the North Sea.'),
+('TEXT', 'text', 'Free Text', '', '', 'Free text not following any standard');
+
 CREATE TABLE rank(
   id TEXT PRIMARY KEY,
   name TEXT DEFAULT '',
@@ -645,8 +712,6 @@ CREATE TABLE rank(
   supraspecific INTEGER DEFAULT 0, -- bool
   uncomparable INTEGER DEFAULT 0 -- bool
 );
-
-
 
 INSERT INTO
   rank(
