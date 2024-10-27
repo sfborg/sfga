@@ -7,7 +7,7 @@ CREATE TABLE version (id);
 INSERT INTO
   version
 VALUES
-  ('v0.3.10');
+  ('v0.3.11');
 
 -- Metadata start
 CREATE TABLE metadata (
@@ -502,10 +502,10 @@ CREATE TABLE type_status (
   name TEXT,
   root TEXT REFERENCES type_status,
   "primary" INTEGER, -- bool
-  codes TEXT, -- nom codes sep ',' 
+  codes TEXT -- nom codes sep ',' 
 );
 
-INSERT INTO type_status (id, name, root, codes, primary)
+INSERT INTO type_status (id, name, root, codes, "primary")
 VALUES
 ('', '', '', '', 0),
 ('OTHER', 'other', 'OTHER', '', 0),
@@ -541,7 +541,7 @@ VALUES
 ('HAPANTOTYPE', 'hapantotype', 'HAPANTOTYPE', 'ZOOLOGICAL', 0),
 ('EX_TYPE', 'ex type', 'EX_TYPE', 'BOTANICAL,ZOOLOGICAL', 0),
 ('ERGATOTYPE', 'ergatotype', 'ERGATOTYPE', 'ZOOLOGICAL', 0),
-('EPITYPE', 'epitype', 'EPITYPE', 'BOTANICAL', 0),
+('EPITYPE', 'epitype', 'EPITYPE', 'BOTANICAL', 0);
 
 CREATE TABLE nom_rel_type (id TEXT PRIMARY KEY);
 
@@ -645,13 +645,13 @@ VALUES
 ('BARE_NAME', 'bare name', 1, 'A name alone without any usage, neither a synonym nor a taxon.', 'BARE_NAME', 0, 0);
 
 CREATE TABLE species_interaction_type (
-id TEXT PRIMARY KEY,
+  id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   inverse TEXT REFERENCES species_interaction_type,
   superTypes TEXT DEFAULT '', -- ids sep ','
   obo TEXT DEFAULT '',
   symmetrical INTEGER DEFAULT 0, -- bool
-  description TEXT
+  description TEXT DEFAULT ''
 );
 
 INSERT INTO species_interaction_type (
@@ -726,7 +726,7 @@ CREATE TABLE gazetteer(
   title TEXT,
   link TEXT,
   areaLinkTemplate TEXT,
-  description TEXT,
+  description TEXT
 );
 
 INSERT into gazetteer ( id, name, title, link, areaLinkTemplate, description)
