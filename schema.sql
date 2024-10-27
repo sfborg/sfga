@@ -112,13 +112,13 @@ CREATE TABLE source (
 -- Data start
 CREATE TABLE taxon (
   id TEXT PRIMARY KEY,
-  alternative_id TEXT DEFAULT '',
+  alternative_id TEXT DEFAULT '', -- scope:id, id sep ','
   source_id TEXT REFERENCES source,
   parent_id TEXT REFERENCES taxon,
-  ordinal INTEGER DEFAULT 0,
-  branch_length INTEGER DEFAULT 0,
+  ordinal INTEGER DEFAULT 0, -- for sorting
+  branch_length INTEGER DEFAULT 0, --length of 'bread crumbs'
   name_id TEXT NOT NULL REFERENCES name,
-  name_phrase TEXT DEFAULT '',
+  name_phrase TEXT DEFAULT '', -- eg `sensu stricto` and other annotations
   according_to_id TEXT REFERENCES reference,
   according_to_page TEXT DEFAULT '',
   according_to_page_link TEXT DEFAULT '',
@@ -194,11 +194,11 @@ CREATE TABLE name (
 );
 
 CREATE TABLE synonym (
-  id TEXT PRIMARY KEY,
+  id TEXT, -- optional
   taxon_id TEXT NOT NULL REFERENCES taxon,
   source_id TEXT REFERENCES source,
   name_id TEXT NOT NULL REFERENCES name,
-  name_phrase TEXT DEFAULT '',
+  name_phrase TEXT DEFAULT '', -- annotation (eg `sensu lato` etc)
   according_to_id TEXT REFERENCES reference,
   status_id TEXT REFERENCES taxonomic_status,
   reference_id TEXT DEFAULT '', -- ids, sep by ',' about this synonym
@@ -207,6 +207,9 @@ CREATE TABLE synonym (
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
 );
+
+CREATE INDEX idx_synonym_id ON synonym (id);
+CREATE INDEX idx_synonym_taxon_id ON synonym (taxon_id);
 
 CREATE TABLE vernacular (
   taxon_id TEXT NOT NULL REFERENCES taxon,
@@ -224,14 +227,14 @@ CREATE TABLE vernacular (
   modified_by TEXT DEFAULT ''
 );
 
-CREATE INDEX idx_vernacular_id ON vernacular (taxon_id);
+CREATE INDEX idx_vernacular_taxon_id ON vernacular (taxon_id);
 
 CREATE TABLE reference (
   id TEXT PRIMARY KEY,
   alternative_id TEXT DEFAULT '', -- sep by ',', scope:id, id, URI/URN
   source_id TEXT REFERENCES source,
   citation TEXT DEFAULT '',
-  type TEXT DEFAULT '',
+  type TEXT REFERENCES reference_type,
   -- author/s in format of either
   -- family1, given1; family2, given2; ..
   -- or
@@ -313,7 +316,7 @@ CREATE TABLE name_relation (
 );
 
 CREATE TABLE type_material (
-  id TEXT PRIMARY KEY,
+  id TEXT DEFAULT '', -- optional
   source_id TEXT REFERENCES source,
   name_id TEXT NOT NULL REFERENCES name,
   citation TEXT DEFAULT '',
@@ -337,9 +340,11 @@ CREATE TABLE type_material (
   modified_by TEXT DEFAULT ''
 );
 
+CREATE INDEX idx_type_material_id ON type_material (id);
+
 CREATE TABLE distribution (
-  taxon_id TEXT NOT NULL,
-  source_id TEXT DEFAULT '',
+  taxon_id TEXT NOT NULL REFERENCES taxon,
+  source_id TEXT REFERENCES source,
   area TEXT DEFAULT '',
   area_id TEXT DEFAULT '',
   gazetteer_id TEXT REFERENCES gazetteer,
@@ -353,7 +358,7 @@ CREATE TABLE distribution (
 CREATE TABLE media (
   taxon_id TEXT NOT NULL REFERENCES taxon,
   source_id TEXT REFERENCES source,
-  url TEXT NOT NULL,
+  url TEXT NOT NULL, -- in CoLDP media is always a link
   type TEXT DEFAULT '', -- MIME type
   format TEXT DEFAULT '',
   title TEXT DEFAULT '',
@@ -402,10 +407,10 @@ CREATE TABLE taxon_property (
 );
 
 CREATE TABLE species_interaction (
-  taxon_id TEXT NOT NULL,
-  related_taxon_id TEXT DEFAULT '',
-  source_id TEXT DEFAULT '',
-  related_taxon_scientific_name TEXT DEFAULT '',
+  taxon_id TEXT NOT NULL REFERENCES taxon,
+  related_taxon_id NOT NULL REFERENCES taxon,
+  source_id TEXT REFERENCES source,
+  related_taxon_scientific_name TEXT DEFAULT '', -- id or hardcoded name?
   type TEXT NOT NULL REFERENCES species_interaction_type,
   reference_id TEXT REFERENCES reference,
   remarks TEXT DEFAULT '',
@@ -417,8 +422,8 @@ CREATE TABLE taxon_concept_relation (
   taxon_id TEXT NOT NULL REFERENCES taxon,
   related_taxon_id TEXT NOT NULL,
   source_id TEXT REFERENCES source,
-  type TEXT NOT NULL,
-  reference_id TEXT DEFAULT '',
+  type TEXT REFERENCES taxon_concept_rel_type,
+  reference_id TEXT REFERENCES reference,
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
@@ -568,6 +573,46 @@ VALUES
   ('DOUBTFUL'),
   ('MANUSCRIPT'),
   ('CHRESONYM');
+
+CREATE TABLE reference_type(id TEXT PRIMARY KEY);
+
+INSERT INTO reference_type VALUES
+(''),
+('ARTICLE'),
+('ARTICLE_JOURNAL'),
+('ARTICLE_MAGAZINE'),
+('ARTICLE_NEWSPAPER'),
+('BILL'),
+('BOOK'),
+('BROADCAST'),
+('CHAPTER'),
+('DATASET'),
+('ENTRY'),
+('ENTRY_DICTIONARY'),
+('ENTRY_ENCYCLOPEDIA'),
+('FIGURE'),
+('GRAPHIC'),
+('INTERVIEW'),
+('LEGAL_CASE'),
+('LEGISLATION'),
+('MANUSCRIPT'),
+('MAP'),
+('MOTION_PICTURE'),
+('MUSICAL_SCORE'),
+('PAMPHLET'),
+('PAPER_CONFERENCE'),
+('PATENT'),
+('PERSONAL_COMMUNICATION'),
+('POST'),
+('POST_WEBLOG'),
+('REPORT'),
+('REVIEW'),
+('REVIEW_BOOK'),
+('SONG'),
+('SPEECH'),
+('THESIS'),
+('TREATY'),
+('WEBPAGE');
 
 CREATE TABLE taxonomic_status (
   id TEXT PRIMARY KEY,
@@ -1036,5 +1081,7 @@ VALUES
 ('GREENLANDIAN', 'Greenlandian', 'age', 0.0117, 0.0082, 'HOLOCENE'),
 ('NORTHGRIPPIAN', 'Northgrippian', 'age', 0.0082, 0.0042, 'HOLOCENE'),
 ('MEGHALAYAN', 'Meghalayan', 'age', 0.0042, 0.0, 'HOLOCENE');
+
+
 
 COMMIT;
