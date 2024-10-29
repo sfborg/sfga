@@ -7,7 +7,7 @@ CREATE TABLE version (id);
 INSERT INTO
   version
 VALUES
-  ('v0.3.11');
+  ('v0.3.12');
 
 -- Metadata start
 CREATE TABLE metadata (
@@ -251,7 +251,7 @@ CREATE TABLE taxon (
   tribe TEXT DEFAULT '',
   subfamily TEXT DEFAULT '',
   family TEXT DEFAULT '',
-  supberfamily TEXT DEFAULT '',
+  superfamily TEXT DEFAULT '',
   suborder TEXT DEFAULT '',
   "order" TEXT DEFAULT '',
   subclass TEXT DEFAULT '',
