@@ -110,124 +110,30 @@ CREATE TABLE source (
 -- Metadata end
 
 -- Data start
-CREATE TABLE taxon (
+CREATE TABLE author (
   id TEXT PRIMARY KEY,
-  alternative_id TEXT DEFAULT '', -- scope:id, id sep ','
   source_id TEXT REFERENCES source,
-  parent_id TEXT REFERENCES taxon,
-  ordinal INTEGER DEFAULT 0, -- for sorting
-  branch_length INTEGER DEFAULT 0, --length of 'bread crumbs'
-  name_id TEXT NOT NULL REFERENCES name,
-  name_phrase TEXT DEFAULT '', -- eg `sensu stricto` and other annotations
-  according_to_id TEXT REFERENCES reference,
-  according_to_page TEXT DEFAULT '',
-  according_to_page_link TEXT DEFAULT '',
-  scrutinizer TEXT DEFAULT '',
-  scrutinizer_id TEXT DEFAULT '', -- ORCID usually
-  scrutinizer_date TEXT DEFAULT '',
-  provisional INTEGER DEFAULT 0, -- bool
-  reference_id TEXT DEFAULT '', -- list of references about the taxon hypothesis
-  extinct INTEGER DEFAULT 0, -- bool
-  temporal_range_start_id TEXT REFERENCES geo_time,
-  temporal_range_end_id TEXT REFERENCES geo_time,
-  environment_id TEXT DEFAULT '', -- environment ids sep by ','
-  species TEXT DEFAULT '',
-  section TEXT DEFAULT '',
-  subgenus TEXT DEFAULT '',
-  subtribe TEXT DEFAULT '',
-  tribe TEXT DEFAULT '',
-  subfamily TEXT DEFAULT '',
-  family TEXT DEFAULT '',
-  supberfamily TEXT DEFAULT '',
-  suborder TEXT DEFAULT '',
-  "order" TEXT DEFAULT '',
-  subclass TEXT DEFAULT '',
-  class TEXT DEFAULT '',
-  subphylum TEXT DEFAULT '',
-  phylum TEXT DEFAULT '',
-  kingdom TEXT DEFAULT '',
-  link TEXT DEFAULT '',
-  remarks TEXT DEFAULT '',
-  modified TEXT DEFAULT '',
-  modified_by TEXT DEFAULT ''
-);
-
-CREATE TABLE name (
-  id TEXT PRIMARY KEY,
-  alternative_id TEXT DEFAULT '',
-  source_id TEXT DEFAULT '',
-  -- basionym_id TEXT DEFAULT '', -- use nom_rel_type instead
-  scientific_name TEXT NOT NULL, -- full canonical form
-  authorship TEXT DEFAULT '', -- verbatim authorship
-  rank_id INTEGER REFERENCES rank,
-  uninomial TEXT DEFAULT '',
-  genus TEXT DEFAULT '',
-  infrageneric_epithet TEXT DEFAULT '',
-  specific_epithet TEXT DEFAULT '',
-  infraspecific_epithet TEXT DEFAULT '',
-  cultivar_epithet TEXT DEFAULT '',
-  notho_id TEXT DEFAULT '', -- ref name_part
-  original_spelling INTEGER DEFAULT 0, -- bool
-  combination_authorship TEXT DEFAULT '', -- separated by '|'
-  combination_authorship_id TEXT DEFAULT '', -- separated by '|'
-  combination_ex_authorship TEXT DEFAULT '', -- separated by '|'
-  combination_ex_authorship_id TEXT DEFAULT '', -- separated by '|'
-  combination_authorship_year TEXT DEFAULT '',
-  basionym_authorship TEXT DEFAULT '', -- separated by '|'
-  basionym_authorship_id TEXT DEFAULT '', -- separated by '|'
-  basionym_ex_authorship TEXT DEFAULT '', -- separated by '|'
-  basionym_ex_authorship_id TEXT DEFAULT '', -- separated by '|'
-  basionym_authorship_year TEXT DEFAULT '',
-  code_id TEXT REFERENCES nom_code,
-  status_id TEXT REFERENCES nom_status,
-  reference_id TEXT DEFAULT '', -- refs about taxon sep ','
-  published_in_year TEXT DEFAULT '',
-  published_in_page TEXT DEFAULT '',
-  published_in_page_link TEXT DEFAULT '',
-  gender_id TEXT REFERENCES gender,
-  gender_agreement INTEGER DEFAULT 0, -- bool
-  etymology TEXT DEFAULT '',
-  link TEXT DEFAULT '',
-  remarks TEXT DEFAULT '',
-  modified TEXT DEFAULT '',
-  modified_by TEXT DEFAULT ''
-);
-
-CREATE TABLE synonym (
-  id TEXT, -- optional
-  taxon_id TEXT NOT NULL REFERENCES taxon,
-  source_id TEXT REFERENCES source,
-  name_id TEXT NOT NULL REFERENCES name,
-  name_phrase TEXT DEFAULT '', -- annotation (eg `sensu lato` etc)
-  according_to_id TEXT REFERENCES reference,
-  status_id TEXT REFERENCES taxonomic_status,
-  reference_id TEXT DEFAULT '', -- ids, sep by ',' about this synonym
-  link TEXT DEFAULT '',
-  remarks TEXT DEFAULT '',
-  modified TEXT DEFAULT '',
-  modified_by TEXT DEFAULT ''
-);
-
-CREATE INDEX idx_synonym_id ON synonym (id);
-CREATE INDEX idx_synonym_taxon_id ON synonym (taxon_id);
-
-CREATE TABLE vernacular (
-  taxon_id TEXT NOT NULL REFERENCES taxon,
-  source_id TEXT REFERENCES source,
-  name TEXT NOT NULL,
-  transliteration TEXT DEFAULT '',
-  language TEXT DEFAULT '',
-  preferred INTEGER DEFAULT 0, -- bool
-  country TEXT DEFAULT '',
-  area TEXT DEFAULT '',
+  alternative_id TEXT DEFAULT '', -- sep by ','
+  given TEXT DEFAULT '',
+  family TEXT NOT NULL,
+  -- f. for filius,  Jr., etc
+  suffix TEXT DEFAULT '',
+  abbreviation_botany TEXT DEFAULT '',
+  alternative_names TEXT DEFAULT '', -- separated by '|'
   sex_id TEXT REFERENCES sex,
-  reference_id TEXT REFERENCES reference,
+  country TEXT DEFAULT '',
+  birth TEXT DEFAULT '',
+  birth_place TEXT DEFAULT '',
+  death TEXT DEFAULT '',
+  affiliation TEXT DEFAULT '',
+  interest TEXT DEFAULT '',
+  reference_id TEXT DEFAULT '', -- sep by ','
+  -- url
+  link TEXT DEFAULT '',
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
 );
-
-CREATE INDEX idx_vernacular_taxon_id ON vernacular (taxon_id);
 
 CREATE TABLE reference (
   id TEXT PRIMARY KEY,
@@ -276,30 +182,124 @@ CREATE TABLE reference (
   modified_by TEXT DEFAULT ''
 );
 
-CREATE TABLE author (
+CREATE TABLE name (
   id TEXT PRIMARY KEY,
-  source_id TEXT REFERENCES source,
-  alternative_id TEXT DEFAULT '', -- sep by ','
-  given TEXT DEFAULT '',
-  family TEXT NOT NULL,
-  -- f. for filius,  Jr., etc
-  suffix TEXT DEFAULT '',
-  abbreviation_botany TEXT DEFAULT '',
-  alternative_names TEXT DEFAULT '', -- separated by '|'
-  sex_id TEXT REFERENCES sex,
-  country TEXT DEFAULT '',
-  birth TEXT DEFAULT '',
-  birth_place TEXT DEFAULT '',
-  death TEXT DEFAULT '',
-  affiliation TEXT DEFAULT '',
-  interest TEXT DEFAULT '',
-  reference_id TEXT DEFAULT '', -- sep by ','
-  -- url
+  alternative_id TEXT DEFAULT '',
+  source_id TEXT DEFAULT '',
+  -- basionym_id TEXT DEFAULT '', -- use name_relation instead
+  scientific_name TEXT NOT NULL, -- full canonical form
+  authorship TEXT DEFAULT '', -- verbatim authorship
+  rank_id INTEGER REFERENCES rank,
+  uninomial TEXT DEFAULT '',
+  genus TEXT DEFAULT '',
+  infrageneric_epithet TEXT DEFAULT '',
+  specific_epithet TEXT DEFAULT '',
+  infraspecific_epithet TEXT DEFAULT '',
+  cultivar_epithet TEXT DEFAULT '',
+  notho_id TEXT DEFAULT '', -- ref name_part
+  original_spelling INTEGER DEFAULT 0, -- bool
+  combination_authorship TEXT DEFAULT '', -- separated by '|'
+  combination_authorship_id TEXT DEFAULT '', -- separated by '|'
+  combination_ex_authorship TEXT DEFAULT '', -- separated by '|'
+  combination_ex_authorship_id TEXT DEFAULT '', -- separated by '|'
+  combination_authorship_year TEXT DEFAULT '',
+  basionym_authorship TEXT DEFAULT '', -- separated by '|'
+  basionym_authorship_id TEXT DEFAULT '', -- separated by '|'
+  basionym_ex_authorship TEXT DEFAULT '', -- separated by '|'
+  basionym_ex_authorship_id TEXT DEFAULT '', -- separated by '|'
+  basionym_authorship_year TEXT DEFAULT '',
+  code_id TEXT REFERENCES nom_code,
+  status_id TEXT REFERENCES nom_status,
+  reference_id TEXT DEFAULT '', -- refs about taxon sep ','
+  published_in_year TEXT DEFAULT '',
+  published_in_page TEXT DEFAULT '',
+  published_in_page_link TEXT DEFAULT '',
+  gender_id TEXT REFERENCES gender,
+  gender_agreement INTEGER DEFAULT 0, -- bool
+  etymology TEXT DEFAULT '',
   link TEXT DEFAULT '',
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
 );
+
+CREATE TABLE taxon (
+  id TEXT PRIMARY KEY,
+  alternative_id TEXT DEFAULT '', -- scope:id, id sep ','
+  source_id TEXT REFERENCES source,
+  parent_id TEXT REFERENCES taxon,
+  ordinal INTEGER DEFAULT 0, -- for sorting
+  branch_length INTEGER DEFAULT 0, --length of 'bread crumbs'
+  name_id TEXT NOT NULL REFERENCES name,
+  name_phrase TEXT DEFAULT '', -- eg `sensu stricto` and other annotations
+  according_to_id TEXT REFERENCES reference,
+  according_to_page TEXT DEFAULT '',
+  according_to_page_link TEXT DEFAULT '',
+  scrutinizer TEXT DEFAULT '',
+  scrutinizer_id TEXT DEFAULT '', -- ORCID usually
+  scrutinizer_date TEXT DEFAULT '',
+  provisional INTEGER DEFAULT 0, -- bool
+  reference_id TEXT DEFAULT '', -- list of references about the taxon hypothesis
+  extinct INTEGER DEFAULT 0, -- bool
+  temporal_range_start_id TEXT REFERENCES geo_time,
+  temporal_range_end_id TEXT REFERENCES geo_time,
+  environment_id TEXT DEFAULT '', -- environment ids sep by ','
+  species TEXT DEFAULT '',
+  section TEXT DEFAULT '',
+  subgenus TEXT DEFAULT '',
+  subtribe TEXT DEFAULT '',
+  tribe TEXT DEFAULT '',
+  subfamily TEXT DEFAULT '',
+  family TEXT DEFAULT '',
+  supberfamily TEXT DEFAULT '',
+  suborder TEXT DEFAULT '',
+  "order" TEXT DEFAULT '',
+  subclass TEXT DEFAULT '',
+  class TEXT DEFAULT '',
+  subphylum TEXT DEFAULT '',
+  phylum TEXT DEFAULT '',
+  kingdom TEXT DEFAULT '',
+  link TEXT DEFAULT '',
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
+);
+
+CREATE TABLE synonym (
+  id TEXT, -- optional
+  taxon_id TEXT NOT NULL REFERENCES taxon,
+  source_id TEXT REFERENCES source,
+  name_id TEXT NOT NULL REFERENCES name,
+  name_phrase TEXT DEFAULT '', -- annotation (eg `sensu lato` etc)
+  according_to_id TEXT REFERENCES reference,
+  status_id TEXT REFERENCES taxonomic_status,
+  reference_id TEXT DEFAULT '', -- ids, sep by ',' about this synonym
+  link TEXT DEFAULT '',
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
+);
+
+CREATE INDEX idx_synonym_id ON synonym (id);
+CREATE INDEX idx_synonym_taxon_id ON synonym (taxon_id);
+
+CREATE TABLE vernacular (
+  taxon_id TEXT NOT NULL REFERENCES taxon,
+  source_id TEXT REFERENCES source,
+  name TEXT NOT NULL,
+  transliteration TEXT DEFAULT '',
+  language TEXT DEFAULT '',
+  preferred INTEGER DEFAULT 0, -- bool
+  country TEXT DEFAULT '',
+  area TEXT DEFAULT '',
+  sex_id TEXT REFERENCES sex,
+  reference_id TEXT REFERENCES reference,
+  remarks TEXT DEFAULT '',
+  modified TEXT DEFAULT '',
+  modified_by TEXT DEFAULT ''
+);
+
+CREATE INDEX idx_vernacular_taxon_id ON vernacular (taxon_id);
 
 CREATE TABLE name_relation (
   name_id TEXT NOT NULL REFERENCES name,
