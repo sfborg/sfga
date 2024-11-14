@@ -7,7 +7,9 @@ CREATE TABLE version (id);
 INSERT INTO
   version
 VALUES
-  ('v0.3.13');
+  ('v0.3.14');
+
+-- fields starting with `gn_` belong to GlobalNames namespace.
 
 -- Metadata start
 CREATE TABLE metadata (
@@ -187,6 +189,7 @@ CREATE TABLE name (
   alternative_id TEXT DEFAULT '',
   source_id TEXT DEFAULT '',
   -- basionym_id TEXT DEFAULT '', -- use name_relation instead
+  gn_full_scientific_name TEXT NOT NULL, -- full name with authorship (if given)
   scientific_name TEXT NOT NULL, -- full canonical form
   authorship TEXT DEFAULT '', -- verbatim authorship
   rank_id INTEGER REFERENCES rank DEFAULT '',
@@ -226,6 +229,8 @@ CREATE TABLE name (
 CREATE TABLE taxon (
   id TEXT PRIMARY KEY,
   alternative_id TEXT DEFAULT '', -- scope:id, id sep ','
+  gn_local_id TEXT DEFAULT '', -- internal ID from the source
+  gn_global_id TEXT DEFAULT '', -- GUID attached to the record.
   source_id TEXT REFERENCES source DEFAULT '',
   parent_id TEXT REFERENCES taxon DEFAULT '',
   ordinal INTEGER DEFAULT 0, -- for sorting
