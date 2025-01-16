@@ -24,7 +24,7 @@ To convert sql file to database
 
 ````bash
 # it will create schema.sqlite and restore database to it.
-sqlite3 schema.sqlite '.read schema.sql'
+rm schema.sqlite && sqlite3 schema.sqlite '.read schema.sql'
 ```
 
 To dump database to a sql file

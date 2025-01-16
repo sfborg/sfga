@@ -252,6 +252,7 @@ CREATE TABLE taxon (
   species TEXT DEFAULT '',
   section TEXT DEFAULT '',
   subgenus TEXT DEFAULT '',
+  genus TEXT DEFAULT '',
   subtribe TEXT DEFAULT '',
   tribe TEXT DEFAULT '',
   subfamily TEXT DEFAULT '',
