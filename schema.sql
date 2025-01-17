@@ -140,6 +140,8 @@ CREATE TABLE author (
 CREATE TABLE reference (
   id TEXT PRIMARY KEY,
   alternative_id TEXT DEFAULT '', -- sep by ',', scope:id, id, URI/URN
+  gn_local_id TEXT default '', -- used by GNverifier for links
+  gn_global_id TEXT default '', -- used by GNverifier for links
   source_id TEXT REFERENCES source DEFAULT '',
   citation TEXT DEFAULT '',
   type TEXT REFERENCES reference_type DEFAULT '',
