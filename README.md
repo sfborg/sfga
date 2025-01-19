@@ -23,6 +23,7 @@ cp schema.db dest/schema.sqlite
 To convert sql file to database
 
 ````bash
+# (REMEMBER to change version.id value)
 # it will create schema.sqlite and restore database to it.
 rm schema.sqlite && sqlite3 schema.sqlite '.read schema.sql'
 ```

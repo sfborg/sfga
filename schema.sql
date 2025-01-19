@@ -2,12 +2,12 @@ PRAGMA foreign_keys = ON;
 
 BEGIN TRANSACTION;
 
-CREATE TABLE version (id);
+CREATE TABLE version (id TEXT NOT NULL) STRICT;
 
 INSERT INTO
   version
 VALUES
-  ('v0.3.14');
+  ('v0.3.16');
 
 -- fields starting with `gn_` belong to GlobalNames namespace.
 
@@ -32,7 +32,7 @@ CREATE TABLE metadata (
   label TEXT DEFAULT '',
   citation TEXT DEFAULT '',
   private INTEGER DEFAULT 0
-);
+) STRICT;
 
 CREATE TABLE contact (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,7 +45,7 @@ CREATE TABLE contact (
   email TEXT NOT NULL,
   url TEXT DEFAULT '',
   note TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE editor (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,7 +58,7 @@ CREATE TABLE editor (
   email TEXT DEFAULT '',
   url TEXT DEFAULT '',
   note TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE creator (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,7 +71,7 @@ CREATE TABLE creator (
   email TEXT DEFAULT '',
   url TEXT DEFAULT '',
   note TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE publisher (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -84,7 +84,7 @@ CREATE TABLE publisher (
   email TEXT DEFAULT '',
   url TEXT DEFAULT '',
   note TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE contributor (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -97,7 +97,7 @@ CREATE TABLE contributor (
   email TEXT DEFAULT '',
   url TEXT DEFAULT '',
   note TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE source (
   id TEXT PRIMARY KEY,
@@ -107,7 +107,7 @@ CREATE TABLE source (
   authors TEXT DEFAULT '',
   issued TEXT DEFAULT '',
   isbn TEXT DEFAULT ''
-);
+) STRICT;
 
 -- Metadata end
 
@@ -135,7 +135,7 @@ CREATE TABLE author (
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE reference (
   id TEXT PRIMARY KEY,
@@ -184,7 +184,7 @@ CREATE TABLE reference (
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE name (
   id TEXT PRIMARY KEY,
@@ -194,7 +194,7 @@ CREATE TABLE name (
   gn_full_scientific_name TEXT NOT NULL, -- full name with authorship (if given)
   scientific_name TEXT NOT NULL, -- full canonical form
   authorship TEXT DEFAULT '', -- verbatim authorship
-  rank_id INTEGER REFERENCES rank DEFAULT '',
+  rank_id TEXT REFERENCES rank DEFAULT '',
   uninomial TEXT DEFAULT '',
   genus TEXT DEFAULT '',
   infrageneric_epithet TEXT DEFAULT '',
@@ -226,7 +226,7 @@ CREATE TABLE name (
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE taxon (
   id TEXT PRIMARY KEY,
@@ -271,7 +271,7 @@ CREATE TABLE taxon (
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE synonym (
   id TEXT, -- optional
@@ -286,7 +286,7 @@ CREATE TABLE synonym (
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE INDEX idx_synonym_id ON synonym (id);
 CREATE INDEX idx_synonym_taxon_id ON synonym (taxon_id);
@@ -305,7 +305,7 @@ CREATE TABLE vernacular (
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE INDEX idx_vernacular_taxon_id ON vernacular (taxon_id);
 
@@ -321,7 +321,7 @@ CREATE TABLE name_relation (
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE type_material (
   id TEXT DEFAULT '', -- optional
@@ -346,7 +346,7 @@ CREATE TABLE type_material (
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE INDEX idx_type_material_id ON type_material (id);
 
@@ -361,7 +361,7 @@ CREATE TABLE distribution (
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE media (
   taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
@@ -377,7 +377,7 @@ CREATE TABLE media (
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 -- treatment files are on file system.
 CREATE TABLE treatment (
@@ -387,7 +387,7 @@ CREATE TABLE treatment (
   format TEXT DEFAULT '', -- HTML, XML, TXT
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE species_estimate (
   taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
@@ -398,7 +398,7 @@ CREATE TABLE species_estimate (
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 -- for arbitrary properties assigned to taxon
 CREATE TABLE taxon_property (
@@ -412,11 +412,11 @@ CREATE TABLE taxon_property (
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE species_interaction (
   taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
-  related_taxon_id NOT NULL REFERENCES taxon DEFAULT '',
+  related_taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
   source_id TEXT REFERENCES source DEFAULT '',
   related_taxon_scientific_name TEXT DEFAULT '', -- id or hardcoded name?
   type TEXT NOT NULL REFERENCES species_interaction_type DEFAULT '',
@@ -424,22 +424,22 @@ CREATE TABLE species_interaction (
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 CREATE TABLE taxon_concept_relation (
   taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
-  related_taxon_id TEXT NOT NULL,
+  related_taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
   source_id TEXT REFERENCES source DEFAULT '',
   type TEXT REFERENCES taxon_concept_rel_type DEFAULT '',
   reference_id TEXT REFERENCES reference DEFAULT '',
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
-);
+) STRICT;
 
 -- ENUMS --
 
-CREATE TABLE nom_code (id TEXT PRIMARY KEY);
+CREATE TABLE nom_code (id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
   nom_code (id)
@@ -452,7 +452,7 @@ VALUES
   ('VIRUS'),
   ('ZOOLOGICAL');
 
-CREATE TABLE name_part (id TEXT PRIMARY KEY);
+CREATE TABLE name_part (id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
   name_part (id)
@@ -463,7 +463,7 @@ VALUES
   ('SPECIFIC'),
   ('INFRASPECIFIC');
 
-CREATE TABLE gender (id TEXT PRIMARY KEY);
+CREATE TABLE gender (id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
   gender (id)
@@ -473,7 +473,7 @@ VALUES
   ('FEMININE'),
   ('NEUTRAL');
 
-CREATE TABLE sex (id TEXT PRIMARY KEY);
+CREATE TABLE sex (id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
   sex (id)
@@ -483,7 +483,7 @@ VALUES
   ('FEMALE'),
   ('HERMAPHRODITE');
 
-CREATE TABLE estimate_type (id TEXT PRIMARY KEY);
+CREATE TABLE estimate_type (id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
   estimate_type (id)
@@ -494,7 +494,7 @@ VALUES
   ('ESTIMATED_SPECIES' -- includes not described living species
 );
 
-CREATE TABLE distribution_status (id TEXT PRIMARY KEY);
+CREATE TABLE distribution_status (id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
   distribution_status (id)
@@ -511,7 +511,7 @@ CREATE TABLE type_status (
   root TEXT REFERENCES type_status,
   "primary" INTEGER, -- bool
   codes TEXT -- nom codes sep ',' 
-);
+) STRICT;
 
 INSERT INTO type_status (id, name, root, codes, "primary")
 VALUES
@@ -551,7 +551,7 @@ VALUES
 ('ERGATOTYPE', 'ergatotype', 'ERGATOTYPE', 'ZOOLOGICAL', 0),
 ('EPITYPE', 'epitype', 'EPITYPE', 'BOTANICAL', 0);
 
-CREATE TABLE nom_rel_type (id TEXT PRIMARY KEY);
+CREATE TABLE nom_rel_type (id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
   nom_rel_type (id)
@@ -567,7 +567,7 @@ VALUES
   ('HOMOTYPIC'),
   ('TYPE');
 
-CREATE TABLE nom_status (id TEXT PRIMARY KEY);
+CREATE TABLE nom_status (id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
   nom_status (id)
@@ -582,7 +582,7 @@ VALUES
   ('MANUSCRIPT'),
   ('CHRESONYM');
 
-CREATE TABLE reference_type(id TEXT PRIMARY KEY);
+CREATE TABLE reference_type(id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO reference_type VALUES
 (''),
@@ -631,7 +631,7 @@ CREATE TABLE taxonomic_status (
   majorStatus TEXT DEFAULT '',
   synonym INTEGER DEFAULT 0, -- bool
   taxon INTEGER -- bool
-);
+) STRICT;
 
 INSERT INTO
   taxonomic_status (
@@ -716,7 +716,7 @@ CREATE TABLE taxon_concept_rel_type (
   name TEXT DEFAULT '',
   rcc5 TEXT DEFAULT '',
   description TEXT
-);
+) STRICT;
 
 INSERT INTO
   taxon_concept_rel_type (id, name, rcc5, description)
@@ -735,7 +735,7 @@ CREATE TABLE gazetteer(
   link TEXT,
   areaLinkTemplate TEXT,
   description TEXT
-);
+) STRICT;
 
 INSERT into gazetteer ( id, name, title, link, areaLinkTemplate, description)
 VALUES
@@ -764,7 +764,7 @@ CREATE TABLE rank(
   suprageneric INTEGER DEFAULT 0, -- bool
   supraspecific INTEGER DEFAULT 0, -- bool
   uncomparable INTEGER DEFAULT 0 -- bool
-);
+) STRICT;
 
 INSERT INTO
   rank(
@@ -905,7 +905,7 @@ CREATE TABLE geo_time (
   name TEXT DEFAULT '',
   type TEXT DEFAULT '',
   start REAL DEFAULT 0,
-  end REAL);
+  end REAL) STRICT;
 
 INSERT INTO
   geo_time (id, name, type, start, end, parent_id)
@@ -1089,7 +1089,5 @@ VALUES
 ('GREENLANDIAN', 'Greenlandian', 'age', 0.0117, 0.0082, 'HOLOCENE'),
 ('NORTHGRIPPIAN', 'Northgrippian', 'age', 0.0082, 0.0042, 'HOLOCENE'),
 ('MEGHALAYAN', 'Meghalayan', 'age', 0.0042, 0.0, 'HOLOCENE');
-
-
 
 COMMIT;
