@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.3.16');
+  ('v0.3.17');
 
 -- fields starting with `gn_` belong to GlobalNames namespace.
 
@@ -172,7 +172,7 @@ CREATE TABLE reference (
   -- edition number
   edition TEXT DEFAULT '',
   -- page number
-  page INTEGER DEFAULT 0,
+  page TEXT DEFAULT '',
   publisher TEXT DEFAULT '',
   publisher_place TEXT DEFAULT '',
   -- version of the reference
@@ -316,7 +316,7 @@ CREATE TABLE name_relation (
   -- nom_rel_type enum
   type_id TEXT NOT NULL REFERENCES nom_rel_type DEFAULT '',
   -- starting page number for the nomenclatural event
-  page INTEGER DEFAULT 0,
+  page TEXT DEFAULT '',
   reference_id TEXT REFERENCES reference DEFAULT '',
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
@@ -336,7 +336,7 @@ CREATE TABLE type_material (
   country TEXT DEFAULT '',
   latitude REAL DEFAULT 0,
   longitude REAL DEFAULT 0,
-  altitude INTEGER DEFAULT 0,
+  altitude REAL DEFAULT 0,
   host TEXT DEFAULT '',
   sex_id TEXT REFERENCES sex DEFAULT '',
   date TEXT DEFAULT '',
@@ -407,7 +407,7 @@ CREATE TABLE taxon_property (
   property TEXT NOT NULL, -- name of the property
   value TEXT NOT NULL,
   reference_id TEXT REFERENCES reference DEFAULT '',
-  page INTEGER DEFAULT 0,
+  page TEXT DEFAULT '',
   ordinal INTEGER DEFAULT 0, -- sorting value
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
@@ -630,7 +630,7 @@ CREATE TABLE taxonomic_status (
   description TEXT DEFAULT '',
   majorStatus TEXT DEFAULT '',
   synonym INTEGER DEFAULT 0, -- bool
-  taxon INTEGER -- bool
+  taxon INTEGER DEFAULT 0 -- bool
 ) STRICT;
 
 INSERT INTO
