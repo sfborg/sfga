@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.3.17');
+  ('v0.3.18');
 
 -- fields starting with `gn_` belong to GlobalNames namespace.
 
@@ -336,7 +336,7 @@ CREATE TABLE type_material (
   country TEXT DEFAULT '',
   latitude REAL DEFAULT 0,
   longitude REAL DEFAULT 0,
-  altitude REAL DEFAULT 0,
+  altitude int DEFAULT 0,
   host TEXT DEFAULT '',
   sex_id TEXT REFERENCES sex DEFAULT '',
   date TEXT DEFAULT '',
