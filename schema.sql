@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.3.18');
+  ('v0.3.19');
 
 -- fields starting with `gn_` belong to GlobalNames namespace.
 
@@ -194,7 +194,7 @@ CREATE TABLE name (
   gn_full_scientific_name TEXT NOT NULL, -- full name with authorship (if given)
   scientific_name TEXT NOT NULL, -- full canonical form
   authorship TEXT DEFAULT '', -- verbatim authorship
-  rank_id TEXT REFERENCES rank DEFAULT '',
+  -- rank_id TEXT REFERENCES rank DEFAULT '', -- move to taxon and synonym
   uninomial TEXT DEFAULT '',
   genus TEXT DEFAULT '',
   infrageneric_epithet TEXT DEFAULT '',
@@ -233,6 +233,7 @@ CREATE TABLE taxon (
   alternative_id TEXT DEFAULT '', -- scope:id, id sep ','
   gn_local_id TEXT DEFAULT '', -- internal ID from the source
   gn_global_id TEXT DEFAULT '', -- GUID attached to the record.
+  rank_id TEXT REFERENCES rank DEFAULT '', -- moved from name
   source_id TEXT REFERENCES source DEFAULT '',
   parent_id TEXT REFERENCES taxon DEFAULT '',
   ordinal INTEGER DEFAULT 0, -- for sorting
@@ -282,6 +283,7 @@ CREATE TABLE synonym (
   according_to_id TEXT REFERENCES reference DEFAULT '',
   status_id TEXT REFERENCES taxonomic_status DEFAULT '',
   reference_id TEXT DEFAULT '', -- ids, sep by ',' about this synonym
+  rank_id TEXT REFERENCES rank DEFAULT '', -- moved from name
   link TEXT DEFAULT '',
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
