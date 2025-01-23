@@ -28,14 +28,12 @@ To convert sql file to database
 rm schema.sqlite && sqlite3 schema.sqlite '.read schema.sql' && echo "DID YOU CHANGE VERSION in schema.sql??"
 ```
 
-To dump database to a sql file
+To get shasum
 
 ```bash
-sqlite3 schema.sqlite
-> // do you things
-> .ouput shema.sql
-> .dump
-````
+shasum -a 256 schema.sql
+```
+
 
 ## Tags
 
@@ -46,3 +44,4 @@ When creating new tags use semantic versioning ideas:
 - backward compatible change: increment minor number
 
 - change in indices etc: increment bug number
+````
