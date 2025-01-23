@@ -2,7 +2,7 @@
 
 Provides schema for Species File Archive format.
 
-# Usage
+## Usage
 
 To import latest
 
@@ -37,12 +37,12 @@ sqlite3 schema.sqlite
 > .dump
 ````
 
-# Tags
+## Tags
 
 When creating new tags use semantic versioning ideas:
 
-incompatible change: increment major number
+- incompatible change: increment major number
 
-backward compatible change: increment minor number
+- backward compatible change: increment minor number
 
-change in indices etc: increment bug number
+- change in indices etc: increment bug number
