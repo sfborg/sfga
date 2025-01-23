@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.3.20');
+  ('v0.3.21');
 
 -- fields starting with `gn_` belong to GlobalNames namespace.
 
@@ -24,19 +24,19 @@ CREATE TABLE metadata (
   geographic_scope TEXT DEFAULT '',
   taxonomic_scope TEXT DEFAULT '',
   temporal_scope TEXT DEFAULT '',
-  confidence INTEGER DEFAULT 0,
-  completeness INTEGER DEFAULT 0,
+  confidence INTEGER DEFAULT NULL,
+  completeness INTEGER DEFAULT NULL,
   license TEXT DEFAULT '',
   url TEXT DEFAULT '',
   logo TEXT DEFAULT '',
   label TEXT DEFAULT '',
   citation TEXT DEFAULT '',
-  private INTEGER DEFAULT 0
+  private INTEGER DEFAULT NULL -- bool 
 ) STRICT;
 
 CREATE TABLE contact (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  metadata_id INTEGER DEFAULT 0,
+  metadata_id INTEGER DEFAULT 1,
   orcid TEXT DEFAULT '',
   given TEXT NOT NULL,
   family TEXT NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE contact (
 
 CREATE TABLE editor (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  metadata_id INTEGER DEFAULT 0,
+  metadata_id INTEGER DEFAULT 1,
   orcid TEXT DEFAULT '',
   given TEXT NOT NULL,
   family TEXT NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE editor (
 
 CREATE TABLE creator (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  metadata_id INTEGER DEFAULT 0,
+  metadata_id INTEGER DEFAULT 1,
   orcid TEXT DEFAULT '',
   given TEXT NOT NULL,
   family TEXT NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE creator (
 
 CREATE TABLE publisher (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  metadata_id INTEGER DEFAULT 0,
+  metadata_id INTEGER DEFAULT 1,
   orcid TEXT DEFAULT '',
   given TEXT DEFAULT '',
   family TEXT DEFAULT '',
@@ -88,7 +88,7 @@ CREATE TABLE publisher (
 
 CREATE TABLE contributor (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  metadata_id INTEGER DEFAULT 0,
+  metadata_id INTEGER DEFAULT 1,
   orcid TEXT DEFAULT '',
   given TEXT NOT NULL,
   family TEXT NOT NULL,
@@ -101,7 +101,7 @@ CREATE TABLE contributor (
 
 CREATE TABLE source (
   id TEXT PRIMARY KEY,
-  metadata_id INTEGER DEFAULT 0,
+  metadata_id INTEGER DEFAULT 1,
   type TEXT DEFAULT '',
   title TEXT DEFAULT '',
   authors TEXT DEFAULT '',
@@ -202,7 +202,7 @@ CREATE TABLE name (
   infraspecific_epithet TEXT DEFAULT '',
   cultivar_epithet TEXT DEFAULT '',
   notho_id TEXT DEFAULT '', -- ref name_part
-  original_spelling INTEGER DEFAULT 0, -- bool
+  original_spelling INTEGER DEFAULT NULL, -- bool
   combination_authorship TEXT DEFAULT '', -- separated by '|'
   combination_authorship_id TEXT DEFAULT '', -- separated by '|'
   combination_ex_authorship TEXT DEFAULT '', -- separated by '|'
@@ -220,7 +220,7 @@ CREATE TABLE name (
   published_in_page TEXT DEFAULT '',
   published_in_page_link TEXT DEFAULT '',
   gender_id TEXT REFERENCES gender DEFAULT '',
-  gender_agreement INTEGER DEFAULT 0, -- bool
+  gender_agreement INTEGER DEFAULT NULL, -- bool
   etymology TEXT DEFAULT '',
   link TEXT DEFAULT '',
   remarks TEXT DEFAULT '',
@@ -235,8 +235,8 @@ CREATE TABLE taxon (
   gn_global_id TEXT DEFAULT '', -- GUID attached to the record.
   source_id TEXT REFERENCES source DEFAULT '',
   parent_id TEXT REFERENCES taxon DEFAULT '',
-  ordinal INTEGER DEFAULT 0, -- for sorting
-  branch_length INTEGER DEFAULT 0, --length of 'bread crumbs'
+  ordinal INTEGER DEFAULT NULL, -- for sorting
+  branch_length INTEGER DEFAULT NULL, --length of 'bread crumbs'
   name_id TEXT NOT NULL REFERENCES name DEFAULT '',
   name_phrase TEXT DEFAULT '', -- eg `sensu stricto` and other annotations
   according_to_id TEXT REFERENCES reference DEFAULT '',
@@ -245,9 +245,9 @@ CREATE TABLE taxon (
   scrutinizer TEXT DEFAULT '',
   scrutinizer_id TEXT DEFAULT '', -- ORCID usually
   scrutinizer_date TEXT DEFAULT '',
-  provisional INTEGER DEFAULT 0, -- bool
+  provisional INTEGER DEFAULT NULL, -- bool
   reference_id TEXT DEFAULT '', -- list of references about the taxon hypothesis
-  extinct INTEGER DEFAULT 0, -- bool
+  extinct INTEGER DEFAULT NULL, -- bool
   temporal_range_start_id TEXT REFERENCES geo_time DEFAULT '',
   temporal_range_end_id TEXT REFERENCES geo_time DEFAULT '',
   environment_id TEXT DEFAULT '', -- environment ids sep by ','
@@ -297,7 +297,7 @@ CREATE TABLE vernacular (
   name TEXT NOT NULL,
   transliteration TEXT DEFAULT '',
   language TEXT DEFAULT '',
-  preferred INTEGER DEFAULT 0, -- bool
+  preferred INTEGER DEFAULT NULL, -- bool
   country TEXT DEFAULT '',
   area TEXT DEFAULT '',
   sex_id TEXT REFERENCES sex DEFAULT '',
@@ -408,7 +408,7 @@ CREATE TABLE taxon_property (
   value TEXT NOT NULL,
   reference_id TEXT REFERENCES reference DEFAULT '',
   page TEXT DEFAULT '',
-  ordinal INTEGER DEFAULT 0, -- sorting value
+  ordinal INTEGER DEFAULT NULL, -- sorting value
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
   modified_by TEXT DEFAULT ''
