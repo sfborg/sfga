@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.3.21');
+  ('v0.3.22');
 
 -- fields starting with `gn_` belong to GlobalNames namespace.
 
@@ -245,7 +245,7 @@ CREATE TABLE taxon (
   scrutinizer TEXT DEFAULT '',
   scrutinizer_id TEXT DEFAULT '', -- ORCID usually
   scrutinizer_date TEXT DEFAULT '',
-  provisional INTEGER DEFAULT NULL, -- bool
+  status_id TEXT REFERENCES taxonomic_status DEFAULT '',
   reference_id TEXT DEFAULT '', -- list of references about the taxon hypothesis
   extinct INTEGER DEFAULT NULL, -- bool
   temporal_range_start_id TEXT REFERENCES geo_time DEFAULT '',
