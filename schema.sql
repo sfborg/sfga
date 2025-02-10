@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.3.22');
+  ('v0.3.23');
 
 -- fields starting with `gn_` belong to GlobalNames namespace.
 
@@ -144,7 +144,7 @@ CREATE TABLE reference (
   gn_global_id TEXT default '', -- used by GNverifier for links
   source_id TEXT REFERENCES source DEFAULT '',
   citation TEXT DEFAULT '',
-  type TEXT REFERENCES reference_type DEFAULT '',
+  type_id TEXT REFERENCES reference_type DEFAULT '',
   -- author/s in format of either
   -- family1, given1; family2, given2; ..
   -- or
@@ -312,7 +312,7 @@ CREATE INDEX idx_vernacular_taxon_id ON vernacular (taxon_id);
 CREATE TABLE name_relation (
   name_id TEXT NOT NULL REFERENCES name DEFAULT '',
   related_name_id TEXT NOT NULL REFERENCES name DEFAULT '',
-  source_id TEXT REFERENCES source,
+  source_id TEXT REFERENCES source DEFAULT '',
   -- nom_rel_type enum
   type_id TEXT NOT NULL REFERENCES nom_rel_type DEFAULT '',
   -- starting page number for the nomenclatural event
