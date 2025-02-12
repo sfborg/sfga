@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.3.23');
+  ('v0.3.24');
 
 -- fields starting with `gn_` belong to GlobalNames namespace.
 
@@ -393,7 +393,7 @@ CREATE TABLE species_estimate (
   taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
   source_id TEXT REFERENCES source DEFAULT '',
   estimate INTEGER NOT NULL, -- estimated number of species
-  type TEXT NOT NULL REFERENCES estimate_type DEFAULT '',
+  type_id TEXT NOT NULL REFERENCES estimate_type DEFAULT '',
   reference_id TEXT REFERENCES reference DEFAULT '',
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
@@ -419,7 +419,7 @@ CREATE TABLE species_interaction (
   related_taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
   source_id TEXT REFERENCES source DEFAULT '',
   related_taxon_scientific_name TEXT DEFAULT '', -- id or hardcoded name?
-  type TEXT NOT NULL REFERENCES species_interaction_type DEFAULT '',
+  type_id TEXT NOT NULL REFERENCES species_interaction_type DEFAULT '',
   reference_id TEXT REFERENCES reference DEFAULT '',
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
@@ -430,7 +430,7 @@ CREATE TABLE taxon_concept_relation (
   taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
   related_taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
   source_id TEXT REFERENCES source DEFAULT '',
-  type TEXT REFERENCES taxon_concept_rel_type DEFAULT '',
+  type_id TEXT REFERENCES taxon_concept_rel_type DEFAULT '',
   reference_id TEXT REFERENCES reference DEFAULT '',
   remarks TEXT DEFAULT '',
   modified TEXT DEFAULT '',
