@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.3.25');
+  ('v0.3.26');
 
 -- fields starting with `gn__` belong to GlobalNames namespace.
 -- fields starting with `col__` belong to the Catalogue of Life namespace.
@@ -191,6 +191,9 @@ CREATE TABLE name (
   col__source_id TEXT DEFAULT '',
   -- basionym_id TEXT DEFAULT '', -- use name_relation instead
   gn__scientific_name_string TEXT NOT NULL, -- full name with authorship (if given)
+  gn__canonical_simple TEXT DEFAULT '',
+  gn__canonical_full TEXT DEFAULT '',
+  gn__canonical_stemmed TEXT DEFAULT '',
   col__scientific_name TEXT NOT NULL, -- full canonical form
   col__authorship TEXT DEFAULT '', -- verbatim authorship
   col__rank_id TEXT REFERENCES rank DEFAULT '',
@@ -226,6 +229,8 @@ CREATE TABLE name (
   col__modified TEXT DEFAULT '',
   col__modified_by TEXT DEFAULT ''
 ) STRICT;
+
+CREATE INDEX idx_name_canonical_stemmed ON name (gn__canonical_stemmed);
 
 CREATE TABLE taxon (
   col__id TEXT PRIMARY KEY,
