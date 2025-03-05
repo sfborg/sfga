@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.3.26');
+  ('v0.3.27');
 
 -- fields starting with `gn__` belong to GlobalNames namespace.
 -- fields starting with `col__` belong to the Catalogue of Life namespace.
@@ -230,7 +230,8 @@ CREATE TABLE name (
   col__modified_by TEXT DEFAULT ''
 ) STRICT;
 
-CREATE INDEX idx_name_canonical_stemmed ON name (gn__canonical_stemmed);
+CREATE INDEX idx_name_scientific_name ON name (col__scientific_name);
+CREATE INDEX idx_name_canonical_simple ON name (gn__canonical_simple);
 
 CREATE TABLE taxon (
   col__id TEXT PRIMARY KEY,
@@ -441,7 +442,28 @@ CREATE TABLE taxon_concept_relation (
   col__modified_by TEXT DEFAULT ''
 ) STRICT;
 
+CREATE TABLE name_match (
+  col__name_id TEXT REFERENCES name DEFAULT '',
+  gn__scientific_name_string TEXT DEFAULT '',
+  ref_col__name_id TEXT DEFAULT '',
+  ref_gn__scientific_name_string TEXT DEFAULT '',
+  ref_col__scientific_name TEXT DEFAULT '',
+  ref_col__authorship TEXT DEFAULT '',
+  gn__match_id TEXT REFERENCES match_type DEFAULT ''
+) STRICT;
+
 -- ENUMS --
+
+CREATE TABLE match_type (id TEXT PRIMARY KEY) STRICT;
+
+INSERT INTO
+  match_type (id)
+VALUES
+  (''),
+  ('EXACT'),
+  ('EXACT_PARTIAL'),
+  ('FUZZY'),
+  ('FUZZY_PARTIAL');
 
 CREATE TABLE nom_code (id TEXT PRIMARY KEY) STRICT;
 
