@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.3.28');
+  ('v0.3.29');
 
 -- fields starting with `gn__` belong to GlobalNames namespace.
 -- fields starting with `col__` belong to the Catalogue of Life namespace.
@@ -200,7 +200,7 @@ CREATE TABLE name (
   gn__bacteria INTEGER DEFAULT NULL, -- bool
   gn__surrogate INTEGER DEFAULT NULL, -- bool
   gn__authors TEXT DEFAULT '', -- separated by '|'
-  gn_id TEXT DEFAULT '', -- UUID v5 generated for GN from name-string
+  gn__id TEXT DEFAULT '', -- UUID v5 generated for GN from name-string
   col__scientific_name TEXT NOT NULL, -- full canonical form
   col__authorship TEXT DEFAULT '', -- verbatim authorship
   col__rank_id TEXT REFERENCES rank DEFAULT '',
