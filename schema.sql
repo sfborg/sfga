@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.3.29');
+  ('v0.3.30');
 
 -- fields starting with `gn__` belong to GlobalNames namespace.
 -- fields starting with `col__` belong to the Catalogue of Life namespace.
@@ -197,8 +197,8 @@ CREATE TABLE name (
   gn__canonical_stemmed TEXT DEFAULT '',
   gn__cardinality INTEGER DEFAULT NULL,
   gn__virus INTEGER DEFAULT NULL, -- bool
-  gn__bacteria INTEGER DEFAULT NULL, -- bool
-  gn__surrogate INTEGER DEFAULT NULL, -- bool
+  gn__hybrid TEXT DEFAULT '',
+  gn__surrogate TEXT DEFAULT '',
   gn__authors TEXT DEFAULT '', -- separated by '|'
   gn__id TEXT DEFAULT '', -- UUID v5 generated for GN from name-string
   col__scientific_name TEXT NOT NULL, -- full canonical form
