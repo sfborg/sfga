@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.3.32');
+  ('v0.3.33');
 
 -- fields starting with `gn__` belong to GlobalNames namespace.
 -- fields starting with `col__` belong to the Catalogue of Life namespace.
@@ -43,6 +43,7 @@ CREATE TABLE contact (
   col__given TEXT NOT NULL,
   col__family TEXT NOT NULL,
   col__rorid TEXT DEFAULT '',
+  col__department TEXT DEFAULT '',
   col__organisation TEXT DEFAULT '',
   col__city TEXT DEFAULT '',
   col__state TEXT DEFAULT '',
@@ -59,6 +60,7 @@ CREATE TABLE editor (
   col__given TEXT NOT NULL,
   col__family TEXT NOT NULL,
   col__rorid TEXT DEFAULT '',
+  col__department TEXT DEFAULT '',
   col__organisation TEXT DEFAULT '',
   col__city TEXT DEFAULT '',
   col__state TEXT DEFAULT '',
@@ -75,6 +77,7 @@ CREATE TABLE creator (
   col__given TEXT NOT NULL,
   col__family TEXT NOT NULL,
   col__rorid TEXT DEFAULT '',
+  col__department TEXT DEFAULT '',
   col__organisation TEXT DEFAULT '',
   col__city TEXT DEFAULT '',
   col__state TEXT DEFAULT '',
@@ -91,6 +94,7 @@ CREATE TABLE publisher (
   col__given TEXT DEFAULT '',
   col__family TEXT DEFAULT '',
   col__rorid TEXT DEFAULT '',
+  col__department TEXT DEFAULT '',
   col__organisation TEXT DEFAULT '',
   col__city TEXT DEFAULT '',
   col__state TEXT DEFAULT '',
@@ -107,6 +111,7 @@ CREATE TABLE contributor (
   col__given TEXT NOT NULL,
   col__family TEXT NOT NULL,
   col__rorid TEXT DEFAULT '',
+  col__department TEXT DEFAULT '',
   col__organisation TEXT DEFAULT '',
   col__city TEXT DEFAULT '',
   col__state TEXT DEFAULT '',
