@@ -1,0 +1,214 @@
+# Schema Change Log
+# Tracking database schema changes from v0.3.30 to current version
+
+---
+schema_changes:
+- version: 1ce229f
+  tag: 1ce229f
+  date: '2025-03-11'
+  commit_message: Add city, state, country
+  description: Added col__city, col__state, col__country to 5 tables
+  changes:
+  - type: table_modification
+    table: contact
+    action: add_columns
+    columns:
+    - name: col__city
+      type: TEXT
+      default: "''"
+      position: after col__organisation
+    - name: col__state
+      type: TEXT
+      default: "''"
+      position: after col__city
+    - name: col__country
+      type: TEXT
+      default: "''"
+      position: after col__state
+  - type: table_modification
+    table: editor
+    action: add_columns
+    columns:
+    - name: col__city
+      type: TEXT
+      default: "''"
+      position: after col__organisation
+    - name: col__state
+      type: TEXT
+      default: "''"
+      position: after col__city
+    - name: col__country
+      type: TEXT
+      default: "''"
+      position: after col__state
+  - type: table_modification
+    table: creator
+    action: add_columns
+    columns:
+    - name: col__city
+      type: TEXT
+      default: "''"
+      position: after col__organisation
+    - name: col__state
+      type: TEXT
+      default: "''"
+      position: after col__city
+    - name: col__country
+      type: TEXT
+      default: "''"
+      position: after col__state
+  - type: table_modification
+    table: publisher
+    action: add_columns
+    columns:
+    - name: col__city
+      type: TEXT
+      default: "''"
+      position: after col__organisation
+    - name: col__state
+      type: TEXT
+      default: "''"
+      position: after col__city
+    - name: col__country
+      type: TEXT
+      default: "''"
+      position: after col__state
+  - type: table_modification
+    table: contributor
+    action: add_columns
+    columns:
+    - name: col__city
+      type: TEXT
+      default: "''"
+      position: after col__organisation
+    - name: col__state
+      type: TEXT
+      default: "''"
+      position: after col__city
+    - name: col__country
+      type: TEXT
+      default: "''"
+      position: after col__state
+- version: v0.3.32
+  tag: '8099543'
+  date: '2025-04-10'
+  commit_message: v0.3.32
+  description: Added sf__species_id, sf__section_id, sf__subgenus_id, sf__genus_id,
+    sf__subtribe_id, sf__tribe_id, sf__subfamily_id, sf__family_id, sf__superfamily_id,
+    sf__suborder_id, sf__order_id, sf__subclass_id, sf__class_id, sf__subphylum_id,
+    sf__phylum_id, sf__kingdom_id to taxon table
+  changes:
+  - type: table_modification
+    table: taxon
+    action: add_columns
+    columns:
+    - name: sf__species_id
+      type: TEXT
+      default: "''"
+      position: after col__kingdom
+    - name: sf__section_id
+      type: TEXT
+      default: "''"
+      position: after sf__species_id
+    - name: sf__subgenus_id
+      type: TEXT
+      default: "''"
+      position: after sf__section_id
+    - name: sf__genus_id
+      type: TEXT
+      default: "''"
+      position: after sf__subgenus_id
+    - name: sf__subtribe_id
+      type: TEXT
+      default: "''"
+      position: after sf__genus_id
+    - name: sf__tribe_id
+      type: TEXT
+      default: "''"
+      position: after sf__subtribe_id
+    - name: sf__subfamily_id
+      type: TEXT
+      default: "''"
+      position: after sf__tribe_id
+    - name: sf__family_id
+      type: TEXT
+      default: "''"
+      position: after sf__subfamily_id
+    - name: sf__superfamily_id
+      type: TEXT
+      default: "''"
+      position: after sf__family_id
+    - name: sf__suborder_id
+      type: TEXT
+      default: "''"
+      position: after sf__superfamily_id
+    - name: sf__order_id
+      type: TEXT
+      default: "''"
+      position: after sf__suborder_id
+    - name: sf__subclass_id
+      type: TEXT
+      default: "''"
+      position: after sf__order_id
+    - name: sf__class_id
+      type: TEXT
+      default: "''"
+      position: after sf__subclass_id
+    - name: sf__subphylum_id
+      type: TEXT
+      default: "''"
+      position: after sf__class_id
+    - name: sf__phylum_id
+      type: TEXT
+      default: "''"
+      position: after sf__subphylum_id
+    - name: sf__kingdom_id
+      type: TEXT
+      default: "''"
+      position: after sf__phylum_id
+- version: v0.3.33
+  tag: 6c4eec1
+  date: '2025-04-29'
+  commit_message: Add department
+  description: Added col__department to 5 tables
+  changes:
+  - type: table_modification
+    table: contact
+    action: add_columns
+    columns:
+    - name: col__department
+      type: TEXT
+      default: "''"
+      position: after col__rorid
+  - type: table_modification
+    table: editor
+    action: add_columns
+    columns:
+    - name: col__department
+      type: TEXT
+      default: "''"
+      position: after col__rorid
+  - type: table_modification
+    table: creator
+    action: add_columns
+    columns:
+    - name: col__department
+      type: TEXT
+      default: "''"
+      position: after col__rorid
+  - type: table_modification
+    table: publisher
+    action: add_columns
+    columns:
+    - name: col__department
+      type: TEXT
+      default: "''"
+      position: after col__rorid
+  - type: table_modification
+    table: contributor
+    action: add_columns
+    columns:
+    - name: col__department
+      type: TEXT
+      default: "''"
+      position: after col__rorid
