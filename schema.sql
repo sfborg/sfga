@@ -7,11 +7,12 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.3.33');
+  ('v0.4.0');
 
 -- fields starting with `gn__` belong to GlobalNames namespace.
 -- fields starting with `col__` belong to the Catalogue of Life namespace.
 -- fields starting with `sf__` belong to the SpeciesFile namespace.
+-- fields starting with `tw__` belong to the TaxonWorks namespace.
 
 -- Metadata start
 CREATE TABLE metadata (
@@ -211,6 +212,7 @@ CREATE TABLE name (
   col__alternative_id TEXT DEFAULT '',
   col__source_id TEXT DEFAULT '',
   -- basionym_id TEXT DEFAULT '', -- use name_relation instead
+  tw__taxon_name_id TEXT DEFAULT '', -- TaxonWorks taxon_names.id
   gn__scientific_name_string TEXT NOT NULL, -- full name with authorship (if given)
   gn__parse_quality INTEGER DEFAULT NULL,
   gn__canonical_simple TEXT DEFAULT '',
@@ -266,6 +268,7 @@ CREATE TABLE taxon (
   col__alternative_id TEXT DEFAULT '', -- scope:id, id sep ','
   gn__local_id TEXT DEFAULT '', -- internal ID from the source
   gn__global_id TEXT DEFAULT '', -- GUID attached to the record.
+  tw__otu_id TEXT DEFAULT '', -- TaxonWorks OTU ID for round-tripping
   col__source_id TEXT REFERENCES source DEFAULT '',
   col__parent_id TEXT REFERENCES taxon DEFAULT '',
   col__ordinal INTEGER DEFAULT NULL, -- for sorting
@@ -364,6 +367,7 @@ CREATE TABLE name_relation (
   col__source_id TEXT REFERENCES source DEFAULT '',
   -- nom_rel_type enum
   col__type_id TEXT NOT NULL REFERENCES nom_rel_type DEFAULT '',
+  tw__name_relationship_type TEXT DEFAULT '', -- canonical NOMEN ontology URI
   -- starting page number for the nomenclatural event
   col__page TEXT DEFAULT '',
   col__reference_id TEXT REFERENCES reference DEFAULT '',
