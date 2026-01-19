@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.4.0');
+  ('v0.4.1');
 
 -- fields starting with `gn__` belong to GlobalNames namespace.
 -- fields starting with `col__` belong to the Catalogue of Life namespace.
@@ -303,6 +303,7 @@ CREATE TABLE taxon (
   col__subphylum TEXT DEFAULT '',
   col__phylum TEXT DEFAULT '',
   col__kingdom TEXT DEFAULT '',
+  sf__realm TEXT DEFAULT '',
   sf__species_id TEXT DEFAULT '', -- for flat classification IDs
   sf__section_id TEXT DEFAULT '',
   sf__subgenus_id TEXT DEFAULT '',
@@ -319,6 +320,7 @@ CREATE TABLE taxon (
   sf__subphylum_id TEXT DEFAULT '',
   sf__phylum_id TEXT DEFAULT '',
   sf__kingdom_id TEXT DEFAULT '',
+  sf__realm_id TEXT DEFAULT '',
   col__link TEXT DEFAULT '',
   col__remarks TEXT DEFAULT '',
   col__modified TEXT DEFAULT '',

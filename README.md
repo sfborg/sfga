@@ -34,7 +34,6 @@ To get shasum
 shasum -a 256 schema.sql
 ```
 
-
 ## Tags
 
 When creating new tags use semantic versioning ideas:
@@ -44,4 +43,7 @@ When creating new tags use semantic versioning ideas:
 - backward compatible change: increment minor number
 
 - change in indices etc: increment bug number
-````
+
+However while the schema is in development with versions v0.x.x, increments
+are not regulated, for example it is ok to make breaking change and
+increment bug number (e.g., v0.2.3 -> v0.2.4).
