@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.4.1');
+  ('v0.4.2');
 
 -- fields starting with `gn__` belong to GlobalNames namespace.
 -- fields starting with `col__` belong to the Catalogue of Life namespace.
@@ -723,6 +723,8 @@ VALUES
 ('', '', 0, '', '', 0, 0),
 ('ACCEPTED', 'accepted', 0, 'A taxonomically accepted, current name', 'ACCEPTED', 0, 1),
 ('PROVISIONALLY_ACCEPTED', 'provisionally accepted', 0, 'Treated as accepted, but doubtful whether this is correct.', 'ACCEPTED', 0, 1),
+('VALID', 'valid', 0, 'A taxonomically valid (ICZN), current name', 'VALID', 0, 1),
+('PROVISIONALLY_VALID', 'provisionally valid', 0, 'Treated as valid (ICZN), but doubtful whether this is correct.', 'VALID', 0, 1),
 ('SYNONYM', 'synonym', 0, 'Names which point unambiguously at one species (not specifying whether homo- or heterotypic).Synonyms, in the CoL sense, include also orthographic variants and published misspellings.', 'SYNONYM', 1, 0),
 ('AMBIGUOUS_SYNONYM', 'ambiguous synonym', 0, 'Names which are ambiguous because they point at the current species and one or more others e.g. homonyms, pro-parte synonyms (in other words, names which appear more than in one place in the Catalogue).', 'SYNONYM', 1, 0),
 ('MISAPPLIED', 'misapplied', 0, 'A misapplied name. Usually accompanied with an accordingTo on the synonym to indicate the source the misapplication can be found in.', 'SYNONYM', 1, 0),
