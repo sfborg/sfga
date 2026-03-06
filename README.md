@@ -98,7 +98,7 @@ shasum -a 256 schema.sql
 This hash is used in [SFlib] to ensure that the right version of the schema is
 uploaded.
 
-**Bug reports and contributions:** use the [issue tracker][issues] on GitHub.
+**Bug reports and contributions:** use the [issue tracker] on GitHub.
 
 ## Authors
 
@@ -119,3 +119,4 @@ Released under [MIT license]
 [Dmitry Mozzherin]: https://github.com/dimus
 [Geoffrey Ower]: https://github.com/gdower
 [MIT license]: LICENSE
+[issue tracker]: https://github.com/sfborg/sfga/issues
