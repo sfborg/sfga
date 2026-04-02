@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.4.2');
+  ('v0.4.3');
 
 -- fields starting with `gn__` belong to GlobalNames namespace.
 -- fields starting with `col__` belong to the Catalogue of Life namespace.
@@ -328,7 +328,7 @@ CREATE TABLE taxon (
 ) STRICT;
 
 CREATE TABLE synonym (
-  col__id TEXT, -- optional
+  col__id TEXT NOT NULL DEFAULT '', -- optional
   col__taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
   col__source_id TEXT REFERENCES source DEFAULT '',
   col__name_id TEXT NOT NULL REFERENCES name DEFAULT '',
@@ -344,6 +344,7 @@ CREATE TABLE synonym (
 
 CREATE INDEX idx_synonym_id ON synonym (col__id);
 CREATE INDEX idx_synonym_taxon_id ON synonym (col__taxon_id);
+CREATE UNIQUE INDEX idx_synonym_id_taxon_id ON synonym (col__id, col__taxon_id) WHERE col__id != '';
 
 CREATE TABLE vernacular (
   col__taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
