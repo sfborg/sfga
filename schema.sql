@@ -7,7 +7,7 @@ CREATE TABLE version (id TEXT NOT NULL) STRICT;
 INSERT INTO
   version
 VALUES
-  ('v0.4.4');
+  ('v0.5.0');
 
 -- fields starting with `gn__` belong to GlobalNames namespace.
 -- fields starting with `col__` belong to the Catalogue of Life namespace.
@@ -137,7 +137,7 @@ CREATE TABLE source (
 -- Data start
 CREATE TABLE author (
   col__id TEXT PRIMARY KEY,
-  col__source_id TEXT REFERENCES source DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
   col__alternative_id TEXT DEFAULT '', -- sep by ','
   col__given TEXT DEFAULT '',
   col__family TEXT NOT NULL,
@@ -145,7 +145,7 @@ CREATE TABLE author (
   col__suffix TEXT DEFAULT '',
   col__abbreviation_botany TEXT DEFAULT '',
   col__alternative_names TEXT DEFAULT '', -- separated by '|'
-  col__sex_id TEXT REFERENCES sex DEFAULT '',
+  col__sex_id TEXT REFERENCES sex(id) DEFAULT '',
   col__country TEXT DEFAULT '',
   col__birth TEXT DEFAULT '',
   col__birth_place TEXT DEFAULT '',
@@ -163,9 +163,9 @@ CREATE TABLE author (
 CREATE TABLE reference (
   col__id TEXT PRIMARY KEY,
   col__alternative_id TEXT DEFAULT '', -- sep by ',', scope:id, id, URI/URN
-  col__source_id TEXT REFERENCES source DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
   col__citation TEXT DEFAULT '',
-  col__type_id TEXT REFERENCES reference_type DEFAULT '',
+  col__type_id TEXT REFERENCES reference_type(id) DEFAULT '',
   -- author/s in format of either
   -- family1, given1; family2, given2; ..
   -- or
@@ -226,7 +226,7 @@ CREATE TABLE name (
   gn__id TEXT DEFAULT '', -- UUID v5 generated for GN from name-string
   col__scientific_name TEXT NOT NULL, -- full canonical form
   col__authorship TEXT DEFAULT '', -- verbatim authorship
-  col__rank_id TEXT REFERENCES rank DEFAULT '',
+  col__rank_id TEXT REFERENCES rank(id) DEFAULT '',
   col__uninomial TEXT DEFAULT '',
   col__genus TEXT DEFAULT '',
   col__infrageneric_epithet TEXT DEFAULT '',
@@ -245,13 +245,13 @@ CREATE TABLE name (
   col__basionym_ex_authorship TEXT DEFAULT '', -- separated by '|'
   col__basionym_ex_authorship_id TEXT DEFAULT '', -- separated by '|'
   col__basionym_authorship_year TEXT DEFAULT '',
-  col__code_id TEXT REFERENCES nom_code DEFAULT '',
-  col__status_id TEXT REFERENCES nom_status DEFAULT '',
+  col__code_id TEXT REFERENCES nom_code(id) DEFAULT '',
+  col__status_id TEXT REFERENCES nom_status(id) DEFAULT '',
   col__reference_id TEXT DEFAULT '', -- refs about taxon sep ','
   col__published_in_year TEXT DEFAULT '',
   col__published_in_page TEXT DEFAULT '',
   col__published_in_page_link TEXT DEFAULT '',
-  col__gender_id TEXT REFERENCES gender DEFAULT '',
+  col__gender_id TEXT REFERENCES gender(id) DEFAULT '',
   col__gender_agreement INTEGER DEFAULT NULL, -- bool
   col__etymology TEXT DEFAULT '',
   col__link TEXT DEFAULT '',
@@ -269,23 +269,23 @@ CREATE TABLE taxon (
   gn__local_id TEXT DEFAULT '', -- internal ID from the source
   gn__global_id TEXT DEFAULT '', -- GUID attached to the record.
   tw__otu_id TEXT DEFAULT '', -- TaxonWorks OTU ID for round-tripping
-  col__source_id TEXT REFERENCES source DEFAULT '',
-  col__parent_id TEXT REFERENCES taxon DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
+  col__parent_id TEXT REFERENCES taxon(id) DEFAULT '',
   col__ordinal INTEGER DEFAULT NULL, -- for sorting
   col__branch_length INTEGER DEFAULT NULL, --length of 'bread crumbs'
-  col__name_id TEXT NOT NULL REFERENCES name DEFAULT '',
+  col__name_id TEXT NOT NULL REFERENCES name(id) DEFAULT '',
   col__name_phrase TEXT DEFAULT '', -- eg `sensu stricto` and other annotations
-  col__according_to_id TEXT REFERENCES reference DEFAULT '',
+  col__according_to_id TEXT REFERENCES reference(id) DEFAULT '',
   col__according_to_page TEXT DEFAULT '',
   col__according_to_page_link TEXT DEFAULT '',
   col__scrutinizer TEXT DEFAULT '',
   col__scrutinizer_id TEXT DEFAULT '', -- ORCID usually
   col__scrutinizer_date TEXT DEFAULT '',
-  col__status_id TEXT REFERENCES taxonomic_status DEFAULT '',
+  col__status_id TEXT REFERENCES taxonomic_status(id) DEFAULT '',
   col__reference_id TEXT DEFAULT '', -- list of references about the taxon hypothesis
   col__extinct INTEGER DEFAULT NULL, -- bool
-  col__temporal_range_start_id TEXT REFERENCES geo_time DEFAULT '',
-  col__temporal_range_end_id TEXT REFERENCES geo_time DEFAULT '',
+  col__temporal_range_start_id TEXT REFERENCES geo_time(id) DEFAULT '',
+  col__temporal_range_end_id TEXT REFERENCES geo_time(id) DEFAULT '',
   col__environment_id TEXT DEFAULT '', -- environment ids sep by ','
   col__species TEXT DEFAULT '',
   col__section TEXT DEFAULT '',
@@ -329,12 +329,12 @@ CREATE TABLE taxon (
 
 CREATE TABLE synonym (
   col__id TEXT NOT NULL DEFAULT '', -- optional
-  col__taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
-  col__source_id TEXT REFERENCES source DEFAULT '',
-  col__name_id TEXT NOT NULL REFERENCES name DEFAULT '',
+  col__taxon_id TEXT NOT NULL REFERENCES taxon(id) DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
+  col__name_id TEXT NOT NULL REFERENCES name(id) DEFAULT '',
   col__name_phrase TEXT DEFAULT '', -- annotation (eg `sensu lato` etc)
-  col__according_to_id TEXT REFERENCES reference DEFAULT '',
-  col__status_id TEXT REFERENCES taxonomic_status DEFAULT '',
+  col__according_to_id TEXT REFERENCES reference(id) DEFAULT '',
+  col__status_id TEXT REFERENCES taxonomic_status(id) DEFAULT '',
   col__reference_id TEXT DEFAULT '', -- ids, sep by ',' about this synonym
   col__link TEXT DEFAULT '',
   col__remarks TEXT DEFAULT '',
@@ -348,16 +348,16 @@ CREATE INDEX idx_synonym_taxon_id ON synonym (col__taxon_id);
 CREATE UNIQUE INDEX idx_synonym_id_taxon_id ON synonym (col__id, col__taxon_id) WHERE col__id != '';
 
 CREATE TABLE vernacular (
-  col__taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
-  col__source_id TEXT REFERENCES source DEFAULT '',
+  col__taxon_id TEXT NOT NULL REFERENCES taxon(id) DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
   col__name TEXT NOT NULL,
   col__transliteration TEXT DEFAULT '',
   col__language TEXT DEFAULT '',
   col__preferred INTEGER DEFAULT NULL, -- bool
   col__country TEXT DEFAULT '',
   col__area TEXT DEFAULT '',
-  col__sex_id TEXT REFERENCES sex DEFAULT '',
-  col__reference_id TEXT REFERENCES reference DEFAULT '',
+  col__sex_id TEXT REFERENCES sex(id) DEFAULT '',
+  col__reference_id TEXT REFERENCES reference(id) DEFAULT '',
   col__remarks TEXT DEFAULT '',
   col__modified TEXT DEFAULT '',
   col__modified_by TEXT DEFAULT ''
@@ -366,15 +366,15 @@ CREATE TABLE vernacular (
 CREATE INDEX idx_vernacular_taxon_id ON vernacular (col__taxon_id);
 
 CREATE TABLE name_relation (
-  col__name_id TEXT NOT NULL REFERENCES name DEFAULT '',
-  col__related_name_id TEXT NOT NULL REFERENCES name DEFAULT '',
-  col__source_id TEXT REFERENCES source DEFAULT '',
+  col__name_id TEXT NOT NULL REFERENCES name(id) DEFAULT '',
+  col__related_name_id TEXT NOT NULL REFERENCES name(id) DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
   -- nom_rel_type enum
-  col__type_id TEXT NOT NULL REFERENCES nom_rel_type DEFAULT '',
+  col__type_id TEXT NOT NULL REFERENCES nom_rel_type(id) DEFAULT '',
   tw__name_relationship_type TEXT DEFAULT '', -- canonical NOMEN ontology URI
   -- starting page number for the nomenclatural event
   col__page TEXT DEFAULT '',
-  col__reference_id TEXT REFERENCES reference DEFAULT '',
+  col__reference_id TEXT REFERENCES reference(id) DEFAULT '',
   col__remarks TEXT DEFAULT '',
   col__modified TEXT DEFAULT '',
   col__modified_by TEXT DEFAULT ''
@@ -382,20 +382,20 @@ CREATE TABLE name_relation (
 
 CREATE TABLE type_material (
   col__id TEXT DEFAULT '', -- optional
-  col__source_id TEXT REFERENCES source DEFAULT '',
-  col__name_id TEXT NOT NULL REFERENCES name DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
+  col__name_id TEXT NOT NULL REFERENCES name(id) DEFAULT '',
   col__citation TEXT DEFAULT '',
-  col__status_id TEXT REFERENCES type_status DEFAULT '',
+  col__status_id TEXT REFERENCES type_status(id) DEFAULT '',
   col__institution_code TEXT DEFAULT '',
   col__catalog_number TEXT DEFAULT '',
-  col__reference_id TEXT REFERENCES reference DEFAULT '',
+  col__reference_id TEXT REFERENCES reference(id) DEFAULT '',
   col__locality TEXT DEFAULT '',
   col__country TEXT DEFAULT '',
   col__latitude REAL DEFAULT 0,
   col__longitude REAL DEFAULT 0,
   col__altitude int DEFAULT 0,
   col__host TEXT DEFAULT '',
-  col__sex_id TEXT REFERENCES sex DEFAULT '',
+  col__sex_id TEXT REFERENCES sex(id) DEFAULT '',
   col__date TEXT DEFAULT '',
   col__collector TEXT DEFAULT '',
   col__associated_sequences TEXT DEFAULT '',
@@ -408,21 +408,21 @@ CREATE TABLE type_material (
 CREATE INDEX idx_type_material_id ON type_material (col__id);
 
 CREATE TABLE distribution (
-  col__taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
-  col__source_id TEXT REFERENCES source DEFAULT '',
+  col__taxon_id TEXT NOT NULL REFERENCES taxon(id) DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
   col__area TEXT DEFAULT '',
   col__area_id TEXT DEFAULT '',
-  col__gazetteer_id TEXT REFERENCES gazetteer DEFAULT '',
-  col__status_id TEXT REFERENCES distribution_status DEFAULT '',
-  col__reference_id TEXT REFERENCES reference DEFAULT '',
+  col__gazetteer_id TEXT REFERENCES gazetteer(id) DEFAULT '',
+  col__status_id TEXT REFERENCES distribution_status(id) DEFAULT '',
+  col__reference_id TEXT REFERENCES reference(id) DEFAULT '',
   col__remarks TEXT DEFAULT '',
   col__modified TEXT DEFAULT '',
   col__modified_by TEXT DEFAULT ''
 ) STRICT;
 
 CREATE TABLE media (
-  col__taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
-  col__source_id TEXT REFERENCES source DEFAULT '',
+  col__taxon_id TEXT NOT NULL REFERENCES taxon(id) DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
   col__url TEXT NOT NULL, -- in CoLDP media is always a link
   col__type TEXT DEFAULT '', -- MIME type
   col__format TEXT DEFAULT '',
@@ -438,8 +438,8 @@ CREATE TABLE media (
 
 -- treatment files are on file system.
 CREATE TABLE treatment (
-  col__taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
-  col__source_id TEXT REFERENCES source DEFAULT '',
+  col__taxon_id TEXT NOT NULL REFERENCES taxon(id) DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
   col__document TEXT NOT NULL,
   col__format TEXT DEFAULT '', -- HTML, XML, TXT
   col__modified TEXT DEFAULT '',
@@ -447,11 +447,11 @@ CREATE TABLE treatment (
 ) STRICT;
 
 CREATE TABLE species_estimate (
-  col__taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
-  col__source_id TEXT REFERENCES source DEFAULT '',
+  col__taxon_id TEXT NOT NULL REFERENCES taxon(id) DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
   col__estimate INTEGER NOT NULL, -- estimated number of species
-  col__type_id TEXT NOT NULL REFERENCES estimate_type DEFAULT '',
-  col__reference_id TEXT REFERENCES reference DEFAULT '',
+  col__type_id TEXT NOT NULL REFERENCES estimate_type(id) DEFAULT '',
+  col__reference_id TEXT REFERENCES reference(id) DEFAULT '',
   col__remarks TEXT DEFAULT '',
   col__modified TEXT DEFAULT '',
   col__modified_by TEXT DEFAULT ''
@@ -459,11 +459,11 @@ CREATE TABLE species_estimate (
 
 -- for arbitrary properties assigned to taxon
 CREATE TABLE taxon_property (
-  col__taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
-  col__source_id TEXT REFERENCES source DEFAULT '',
+  col__taxon_id TEXT NOT NULL REFERENCES taxon(id) DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
   col__property TEXT NOT NULL, -- name of the property
   col__value TEXT NOT NULL,
-  col__reference_id TEXT REFERENCES reference DEFAULT '',
+  col__reference_id TEXT REFERENCES reference(id) DEFAULT '',
   col__page TEXT DEFAULT '',
   col__ordinal INTEGER DEFAULT NULL, -- sorting value
   col__remarks TEXT DEFAULT '',
@@ -472,36 +472,36 @@ CREATE TABLE taxon_property (
 ) STRICT;
 
 CREATE TABLE species_interaction (
-  col__taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
-  col__related_taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
-  col__source_id TEXT REFERENCES source DEFAULT '',
+  col__taxon_id TEXT NOT NULL REFERENCES taxon(id) DEFAULT '',
+  col__related_taxon_id TEXT NOT NULL REFERENCES taxon(id) DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
   col__related_taxon_scientific_name TEXT DEFAULT '', -- id or hardcoded name?
-  col__type_id TEXT NOT NULL REFERENCES species_interaction_type DEFAULT '',
-  col__reference_id TEXT REFERENCES reference DEFAULT '',
+  col__type_id TEXT NOT NULL REFERENCES species_interaction_type(id) DEFAULT '',
+  col__reference_id TEXT REFERENCES reference(id) DEFAULT '',
   col__remarks TEXT DEFAULT '',
   col__modified TEXT DEFAULT '',
   col__modified_by TEXT DEFAULT ''
 ) STRICT;
 
 CREATE TABLE taxon_concept_relation (
-  col__taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
-  col__related_taxon_id TEXT NOT NULL REFERENCES taxon DEFAULT '',
-  col__source_id TEXT REFERENCES source DEFAULT '',
-  col__type_id TEXT REFERENCES taxon_concept_rel_type DEFAULT '',
-  col__reference_id TEXT REFERENCES reference DEFAULT '',
+  col__taxon_id TEXT NOT NULL REFERENCES taxon(id) DEFAULT '',
+  col__related_taxon_id TEXT NOT NULL REFERENCES taxon(id) DEFAULT '',
+  col__source_id TEXT REFERENCES source(id) DEFAULT '',
+  col__type_id TEXT REFERENCES taxon_concept_rel_type(id) DEFAULT '',
+  col__reference_id TEXT REFERENCES reference(id) DEFAULT '',
   col__remarks TEXT DEFAULT '',
   col__modified TEXT DEFAULT '',
   col__modified_by TEXT DEFAULT ''
 ) STRICT;
 
 CREATE TABLE name_match (
-  col__name_id TEXT REFERENCES name DEFAULT '',
+  col__name_id TEXT REFERENCES name(id) DEFAULT '',
   gn__scientific_name_string TEXT DEFAULT '',
   ref_col__name_id TEXT DEFAULT '',
   ref_gn__scientific_name_string TEXT DEFAULT '',
   ref_col__scientific_name TEXT DEFAULT '',
   ref_col__authorship TEXT DEFAULT '',
-  gn__match_id TEXT REFERENCES match_type DEFAULT ''
+  gn__match_id TEXT REFERENCES match_type(id) DEFAULT ''
 ) STRICT;
 
 -- ENUMS --
@@ -586,7 +586,7 @@ VALUES
 CREATE TABLE type_status (
   id TEXT PRIMARY KEY,
   name TEXT,
-  root TEXT REFERENCES type_status,
+  root TEXT REFERENCES type_status(id),
   "primary" INTEGER, -- bool
   codes TEXT -- nom codes sep ',' 
 ) STRICT;
@@ -735,7 +735,7 @@ VALUES
 CREATE TABLE species_interaction_type (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
-  inverse TEXT REFERENCES species_interaction_type,
+  inverse TEXT REFERENCES species_interaction_type(id),
   superTypes TEXT DEFAULT '', -- ids sep ','
   obo TEXT DEFAULT '',
   symmetrical INTEGER DEFAULT 0, -- bool
@@ -834,7 +834,7 @@ CREATE TABLE rank(
   name TEXT DEFAULT '',
   plural TEXT DEFAULT '',
   marker TEXT DEFAULT '',
-  major_rank_id TEXT REFERENCES rank,
+  major_rank_id TEXT REFERENCES rank(id),
   ambiguous_marker INTEGER DEFAULT 0, -- bool
   family_group INTEGER DEFAULT 0, -- bool
   genus_group INTEGER DEFAULT 0, -- bool
@@ -981,7 +981,7 @@ VALUES
 
 CREATE TABLE geo_time (
   id TEXT PRIMARY KEY,
-  parent_id TEXT REFERENCES geo_time,
+  parent_id TEXT REFERENCES geo_time(id),
   name TEXT DEFAULT '',
   type TEXT DEFAULT '',
   start REAL DEFAULT 0,
