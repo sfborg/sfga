@@ -88,7 +88,7 @@ Update the `version.id` value in `schema.sql` first, then run:
 
 ```bash
 rm -f schema.db && sqlite3 schema.db '.read schema.sql' && \
-  echo "Built schema.db — version: $(sqlite3 schema.db 'SELECT id FROM version')"
+  echo "Built schema.db — version: $(sqlite3 schema.db 'SELECT sf__id FROM version')"
 ```
 
 **Verifying schema integrity:**

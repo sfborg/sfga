@@ -1,18 +1,18 @@
 PRAGMA foreign_keys = ON;
 
-BEGIN TRANSACTION;
-
-CREATE TABLE version (id TEXT NOT NULL) STRICT;
-
-INSERT INTO
-  version
-VALUES
-  ('v0.5.0');
-
 -- fields starting with `gn__` belong to GlobalNames namespace.
 -- fields starting with `col__` belong to the Catalogue of Life namespace.
 -- fields starting with `sf__` belong to the SpeciesFile namespace.
 -- fields starting with `tw__` belong to the TaxonWorks namespace.
+
+BEGIN TRANSACTION;
+
+CREATE TABLE version (sf__id TEXT NOT NULL) STRICT;
+
+INSERT INTO
+  version
+VALUES
+  ('v0.5.1');
 
 -- Metadata start
 CREATE TABLE metadata (
@@ -145,7 +145,7 @@ CREATE TABLE author (
   col__suffix TEXT DEFAULT '',
   col__abbreviation_botany TEXT DEFAULT '',
   col__alternative_names TEXT DEFAULT '', -- separated by '|'
-  col__sex_id TEXT REFERENCES sex(id) DEFAULT '',
+  col__sex_id TEXT REFERENCES sex(col__id) DEFAULT '',
   col__country TEXT DEFAULT '',
   col__birth TEXT DEFAULT '',
   col__birth_place TEXT DEFAULT '',
@@ -165,7 +165,7 @@ CREATE TABLE reference (
   col__alternative_id TEXT DEFAULT '', -- sep by ',', scope:id, id, URI/URN
   col__source_id TEXT REFERENCES source(col__id) DEFAULT '',
   col__citation TEXT DEFAULT '',
-  col__type_id TEXT REFERENCES reference_type(id) DEFAULT '',
+  col__type_id TEXT REFERENCES reference_type(col__id) DEFAULT '',
   -- author/s in format of either
   -- family1, given1; family2, given2; ..
   -- or
@@ -226,7 +226,7 @@ CREATE TABLE name (
   gn__id TEXT DEFAULT '', -- UUID v5 generated for GN from name-string
   col__scientific_name TEXT NOT NULL, -- full canonical form
   col__authorship TEXT DEFAULT '', -- verbatim authorship
-  col__rank_id TEXT REFERENCES rank(id) DEFAULT '',
+  col__rank_id TEXT REFERENCES rank(col__id) DEFAULT '',
   col__uninomial TEXT DEFAULT '',
   col__genus TEXT DEFAULT '',
   col__infrageneric_epithet TEXT DEFAULT '',
@@ -245,13 +245,13 @@ CREATE TABLE name (
   col__basionym_ex_authorship TEXT DEFAULT '', -- separated by '|'
   col__basionym_ex_authorship_id TEXT DEFAULT '', -- separated by '|'
   col__basionym_authorship_year TEXT DEFAULT '',
-  col__code_id TEXT REFERENCES nom_code(id) DEFAULT '',
-  col__status_id TEXT REFERENCES nom_status(id) DEFAULT '',
+  col__code_id TEXT REFERENCES nom_code(col__id) DEFAULT '',
+  col__status_id TEXT REFERENCES nom_status(col__id) DEFAULT '',
   col__reference_id TEXT DEFAULT '', -- refs about taxon sep ','
   col__published_in_year TEXT DEFAULT '',
   col__published_in_page TEXT DEFAULT '',
   col__published_in_page_link TEXT DEFAULT '',
-  col__gender_id TEXT REFERENCES gender(id) DEFAULT '',
+  col__gender_id TEXT REFERENCES gender(col__id) DEFAULT '',
   col__gender_agreement INTEGER DEFAULT NULL, -- bool
   col__etymology TEXT DEFAULT '',
   col__link TEXT DEFAULT '',
@@ -281,11 +281,11 @@ CREATE TABLE taxon (
   col__scrutinizer TEXT DEFAULT '',
   col__scrutinizer_id TEXT DEFAULT '', -- ORCID usually
   col__scrutinizer_date TEXT DEFAULT '',
-  col__status_id TEXT REFERENCES taxonomic_status(id) DEFAULT '',
+  col__status_id TEXT REFERENCES taxonomic_status(col__id) DEFAULT '',
   col__reference_id TEXT DEFAULT '', -- list of references about the taxon hypothesis
   col__extinct INTEGER DEFAULT NULL, -- bool
-  col__temporal_range_start_id TEXT REFERENCES geo_time(id) DEFAULT '',
-  col__temporal_range_end_id TEXT REFERENCES geo_time(id) DEFAULT '',
+  col__temporal_range_start_id TEXT REFERENCES geo_time(col__id) DEFAULT '',
+  col__temporal_range_end_id TEXT REFERENCES geo_time(col__id) DEFAULT '',
   col__environment_id TEXT DEFAULT '', -- environment ids sep by ','
   col__species TEXT DEFAULT '',
   col__section TEXT DEFAULT '',
@@ -334,7 +334,7 @@ CREATE TABLE synonym (
   col__name_id TEXT NOT NULL REFERENCES name(col__id) DEFAULT '',
   col__name_phrase TEXT DEFAULT '', -- annotation (eg `sensu lato` etc)
   col__according_to_id TEXT REFERENCES reference(col__id) DEFAULT '',
-  col__status_id TEXT REFERENCES taxonomic_status(id) DEFAULT '',
+  col__status_id TEXT REFERENCES taxonomic_status(col__id) DEFAULT '',
   col__reference_id TEXT DEFAULT '', -- ids, sep by ',' about this synonym
   col__link TEXT DEFAULT '',
   col__remarks TEXT DEFAULT '',
@@ -356,7 +356,7 @@ CREATE TABLE vernacular (
   col__preferred INTEGER DEFAULT NULL, -- bool
   col__country TEXT DEFAULT '',
   col__area TEXT DEFAULT '',
-  col__sex_id TEXT REFERENCES sex(id) DEFAULT '',
+  col__sex_id TEXT REFERENCES sex(col__id) DEFAULT '',
   col__reference_id TEXT REFERENCES reference(col__id) DEFAULT '',
   col__remarks TEXT DEFAULT '',
   col__modified TEXT DEFAULT '',
@@ -370,7 +370,7 @@ CREATE TABLE name_relation (
   col__related_name_id TEXT NOT NULL REFERENCES name(col__id) DEFAULT '',
   col__source_id TEXT REFERENCES source(col__id) DEFAULT '',
   -- nom_rel_type enum
-  col__type_id TEXT NOT NULL REFERENCES nom_rel_type(id) DEFAULT '',
+  col__type_id TEXT NOT NULL REFERENCES nom_rel_type(col__id) DEFAULT '',
   tw__name_relationship_type TEXT DEFAULT '', -- canonical NOMEN ontology URI
   -- starting page number for the nomenclatural event
   col__page TEXT DEFAULT '',
@@ -385,7 +385,7 @@ CREATE TABLE type_material (
   col__source_id TEXT REFERENCES source(col__id) DEFAULT '',
   col__name_id TEXT NOT NULL REFERENCES name(col__id) DEFAULT '',
   col__citation TEXT DEFAULT '',
-  col__status_id TEXT REFERENCES type_status(id) DEFAULT '',
+  col__status_id TEXT REFERENCES type_status(col__id) DEFAULT '',
   col__institution_code TEXT DEFAULT '',
   col__catalog_number TEXT DEFAULT '',
   col__reference_id TEXT REFERENCES reference(col__id) DEFAULT '',
@@ -395,7 +395,7 @@ CREATE TABLE type_material (
   col__longitude REAL DEFAULT 0,
   col__altitude int DEFAULT 0,
   col__host TEXT DEFAULT '',
-  col__sex_id TEXT REFERENCES sex(id) DEFAULT '',
+  col__sex_id TEXT REFERENCES sex(col__id) DEFAULT '',
   col__date TEXT DEFAULT '',
   col__collector TEXT DEFAULT '',
   col__associated_sequences TEXT DEFAULT '',
@@ -412,8 +412,8 @@ CREATE TABLE distribution (
   col__source_id TEXT REFERENCES source(col__id) DEFAULT '',
   col__area TEXT DEFAULT '',
   col__area_id TEXT DEFAULT '',
-  col__gazetteer_id TEXT REFERENCES gazetteer(id) DEFAULT '',
-  col__status_id TEXT REFERENCES distribution_status(id) DEFAULT '',
+  col__gazetteer_id TEXT REFERENCES gazetteer(col__id) DEFAULT '',
+  col__status_id TEXT REFERENCES distribution_status(col__id) DEFAULT '',
   col__reference_id TEXT REFERENCES reference(col__id) DEFAULT '',
   col__remarks TEXT DEFAULT '',
   col__modified TEXT DEFAULT '',
@@ -450,7 +450,7 @@ CREATE TABLE species_estimate (
   col__taxon_id TEXT NOT NULL REFERENCES taxon(col__id) DEFAULT '',
   col__source_id TEXT REFERENCES source(col__id) DEFAULT '',
   col__estimate INTEGER NOT NULL, -- estimated number of species
-  col__type_id TEXT NOT NULL REFERENCES estimate_type(id) DEFAULT '',
+  col__type_id TEXT NOT NULL REFERENCES estimate_type(col__id) DEFAULT '',
   col__reference_id TEXT REFERENCES reference(col__id) DEFAULT '',
   col__remarks TEXT DEFAULT '',
   col__modified TEXT DEFAULT '',
@@ -476,7 +476,7 @@ CREATE TABLE species_interaction (
   col__related_taxon_id TEXT NOT NULL REFERENCES taxon(col__id) DEFAULT '',
   col__source_id TEXT REFERENCES source(col__id) DEFAULT '',
   col__related_taxon_scientific_name TEXT DEFAULT '', -- id or hardcoded name?
-  col__type_id TEXT NOT NULL REFERENCES species_interaction_type(id) DEFAULT '',
+  col__type_id TEXT NOT NULL REFERENCES species_interaction_type(col__id) DEFAULT '',
   col__reference_id TEXT REFERENCES reference(col__id) DEFAULT '',
   col__remarks TEXT DEFAULT '',
   col__modified TEXT DEFAULT '',
@@ -487,7 +487,7 @@ CREATE TABLE taxon_concept_relation (
   col__taxon_id TEXT NOT NULL REFERENCES taxon(col__id) DEFAULT '',
   col__related_taxon_id TEXT NOT NULL REFERENCES taxon(col__id) DEFAULT '',
   col__source_id TEXT REFERENCES source(col__id) DEFAULT '',
-  col__type_id TEXT REFERENCES taxon_concept_rel_type(id) DEFAULT '',
+  col__type_id TEXT REFERENCES taxon_concept_rel_type(col__id) DEFAULT '',
   col__reference_id TEXT REFERENCES reference(col__id) DEFAULT '',
   col__remarks TEXT DEFAULT '',
   col__modified TEXT DEFAULT '',
@@ -501,15 +501,15 @@ CREATE TABLE name_match (
   ref_gn__scientific_name_string TEXT DEFAULT '',
   ref_col__scientific_name TEXT DEFAULT '',
   ref_col__authorship TEXT DEFAULT '',
-  gn__match_id TEXT REFERENCES match_type(id) DEFAULT ''
+  gn__match_id TEXT REFERENCES match_type(col__id) DEFAULT ''
 ) STRICT;
 
 -- ENUMS --
 
-CREATE TABLE match_type (id TEXT PRIMARY KEY) STRICT;
+CREATE TABLE match_type (col__id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
-  match_type (id)
+  match_type (col__id)
 VALUES
   (''),
   ('EXACT'),
@@ -517,10 +517,10 @@ VALUES
   ('FUZZY'),
   ('FUZZY_PARTIAL');
 
-CREATE TABLE nom_code (id TEXT PRIMARY KEY) STRICT;
+CREATE TABLE nom_code (col__id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
-  nom_code (id)
+  nom_code (col__id)
 VALUES
   (''),
   ('BACTERIAL'),
@@ -530,10 +530,10 @@ VALUES
   ('VIRUS'),
   ('ZOOLOGICAL');
 
-CREATE TABLE name_part (id TEXT PRIMARY KEY) STRICT;
+CREATE TABLE name_part (col__id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
-  name_part (id)
+  name_part (col__id)
 VALUES
   (''),
   ('GENERIC'),
@@ -541,30 +541,30 @@ VALUES
   ('SPECIFIC'),
   ('INFRASPECIFIC');
 
-CREATE TABLE gender (id TEXT PRIMARY KEY) STRICT;
+CREATE TABLE gender (col__id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
-  gender (id)
+  gender (col__id)
 VALUES
   (''),
   ('MASCULINE'),
   ('FEMININE'),
   ('NEUTRAL');
 
-CREATE TABLE sex (id TEXT PRIMARY KEY) STRICT;
+CREATE TABLE sex (col__id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
-  sex (id)
+  sex (col__id)
 VALUES
   (''),
   ('MALE'),
   ('FEMALE'),
   ('HERMAPHRODITE');
 
-CREATE TABLE estimate_type (id TEXT PRIMARY KEY) STRICT;
+CREATE TABLE estimate_type (col__id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
-  estimate_type (id)
+  estimate_type (col__id)
 VALUES
   (''),
   ('SPECIES_EXTINCT'),
@@ -572,10 +572,10 @@ VALUES
   ('ESTIMATED_SPECIES' -- includes not described living species
 );
 
-CREATE TABLE distribution_status (id TEXT PRIMARY KEY) STRICT;
+CREATE TABLE distribution_status (col__id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
-  distribution_status (id)
+  distribution_status (col__id)
 VALUES
   (''),
   ('NATIVE'),
@@ -584,14 +584,14 @@ VALUES
   ('UNCERTAIN');
 
 CREATE TABLE type_status (
-  id TEXT PRIMARY KEY,
-  name TEXT,
-  root TEXT REFERENCES type_status(id),
-  "primary" INTEGER, -- bool
-  codes TEXT -- nom codes sep ',' 
+  col__id TEXT PRIMARY KEY,
+  col__name TEXT,
+  col__root TEXT REFERENCES type_status(col__id),
+  col__primary INTEGER, -- bool
+  col__codes TEXT -- nom codes sep ',' 
 ) STRICT;
 
-INSERT INTO type_status (id, name, root, codes, "primary")
+INSERT INTO type_status (col__id, col__name, col__root, col__codes, col__primary)
 VALUES
 ('', '', '', '', 0),
 ('OTHER', 'other', 'OTHER', '', 0),
@@ -629,10 +629,10 @@ VALUES
 ('ERGATOTYPE', 'ergatotype', 'ERGATOTYPE', 'ZOOLOGICAL', 0),
 ('EPITYPE', 'epitype', 'EPITYPE', 'BOTANICAL', 0);
 
-CREATE TABLE nom_rel_type (id TEXT PRIMARY KEY) STRICT;
+CREATE TABLE nom_rel_type (col__id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
-  nom_rel_type (id)
+  nom_rel_type (col__id)
 VALUES
   (''),
   ('SPELLING_CORRECTION'),
@@ -645,10 +645,10 @@ VALUES
   ('HOMOTYPIC'),
   ('TYPE');
 
-CREATE TABLE nom_status (id TEXT PRIMARY KEY) STRICT;
+CREATE TABLE nom_status (col__id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO
-  nom_status (id)
+  nom_status (col__id)
 VALUES
   (''),
   ('ESTABLISHED'),
@@ -660,7 +660,7 @@ VALUES
   ('MANUSCRIPT'),
   ('CHRESONYM');
 
-CREATE TABLE reference_type(id TEXT PRIMARY KEY) STRICT;
+CREATE TABLE reference_type(col__id TEXT PRIMARY KEY) STRICT;
 
 INSERT INTO reference_type VALUES
 (''),
@@ -701,25 +701,25 @@ INSERT INTO reference_type VALUES
 ('WEBPAGE');
 
 CREATE TABLE taxonomic_status (
-  id TEXT PRIMARY KEY,
-  value TEXT DEFAULT '',
-  name TEXT DEFAULT '',
-  bare_name INTEGER DEFAULT 0, -- bool
-  description TEXT DEFAULT '',
-  majorStatus TEXT DEFAULT '',
-  synonym INTEGER DEFAULT 0, -- bool
-  taxon INTEGER DEFAULT 0 -- bool
+  col__id TEXT PRIMARY KEY,
+  col__value TEXT DEFAULT '',
+  col__name TEXT DEFAULT '',
+  col__bare_name INTEGER DEFAULT 0, -- bool
+  col__description TEXT DEFAULT '',
+  col__majorStatus TEXT DEFAULT '',
+  col__synonym INTEGER DEFAULT 0, -- bool
+  col__taxon INTEGER DEFAULT 0 -- bool
 ) STRICT;
 
 INSERT INTO
   taxonomic_status (
-    id,
-    name,
-    bare_name,
-    description,
-    majorStatus,
-    synonym,
-    taxon
+    col__id,
+    col__name,
+    col__bare_name,
+    col__description,
+    col__majorStatus,
+    col__synonym,
+    col__taxon
   )
 VALUES
 ('', '', 0, '', '', 0, 0),
@@ -733,17 +733,17 @@ VALUES
 ('BARE_NAME', 'bare name', 1, 'A name alone without any usage, neither a synonym nor a taxon.', 'BARE_NAME', 0, 0);
 
 CREATE TABLE species_interaction_type (
-  id TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  inverse TEXT REFERENCES species_interaction_type(id),
-  superTypes TEXT DEFAULT '', -- ids sep ','
-  obo TEXT DEFAULT '',
-  symmetrical INTEGER DEFAULT 0, -- bool
-  description TEXT DEFAULT ''
+  col__id TEXT PRIMARY KEY,
+  col__name TEXT NOT NULL,
+  col__inverse TEXT REFERENCES species_interaction_type(col__id),
+  col__superTypes TEXT DEFAULT '', -- ids sep ','
+  col__obo TEXT DEFAULT '',
+  col__symmetrical INTEGER DEFAULT 0, -- bool
+  col__description TEXT DEFAULT ''
 );
 
 INSERT INTO species_interaction_type (
-  id, name, inverse, superTypes, obo, symmetrical, description
+  col__id, col__name, col__inverse, col__superTypes, col__obo, col__symmetrical, col__description
 )
 VALUES
 ('', '', '', '', '', 0, ''),
@@ -792,14 +792,14 @@ VALUES
 ('RELATED_TO', 'related to', 'RELATED_TO', '', 'http://purl.obolibrary.org/obo/RO_0002321', 1, 'Ecologically related to');
 
 CREATE TABLE taxon_concept_rel_type (
-  id TEXT PRIMARY KEY,
-  name TEXT DEFAULT '',
-  rcc5 TEXT DEFAULT '',
-  description TEXT
+  col__id TEXT PRIMARY KEY,
+  col__name TEXT DEFAULT '',
+  col__rcc5 TEXT DEFAULT '',
+  col__description TEXT
 ) STRICT;
 
 INSERT INTO
-  taxon_concept_rel_type (id, name, rcc5, description)
+  taxon_concept_rel_type (col__id, col__name, col__rcc5, col__description)
 VALUES
 ('', '', '', ''),
 ('EQUALS', 'equals', 'equal (EQ)', 'The circumscription of this taxon is (essentially) identical to the related taxon.'),
@@ -809,15 +809,15 @@ VALUES
 ('EXCLUDES', 'excludes', 'disjoint (DR)', 'The related taxon concept is not a subset of this concept.');
 
 CREATE TABLE gazetteer(
-  id TEXT PRIMARY KEY,
-  name TEXT,
-  title TEXT,
-  link TEXT,
-  areaLinkTemplate TEXT,
-  description TEXT
+  col__id TEXT PRIMARY KEY,
+  col__name TEXT,
+  col__title TEXT,
+  col__link TEXT,
+  col__areaLinkTemplate TEXT,
+  col__description TEXT
 ) STRICT;
 
-INSERT into gazetteer ( id, name, title, link, areaLinkTemplate, description)
+INSERT into gazetteer ( col__id, col__name, col__title, col__link, col__areaLinkTemplate, col__description)
 VALUES
 ('', '', '', '', '', ''),
 ('TDWG', 'tdwg', 'World Geographical Scheme for Recording Plant Distributions', 'http://www.tdwg.org/standards/109', '', 'World Geographical Scheme for Recording Plant Distributions published by TDWG at level 1, 2, 3 or 4.  Level 1 = Continents, Level 2 = Regions, Level 3 = Botanical countries, Level 4 = Basic recording units.'),
@@ -830,38 +830,38 @@ VALUES
 ('TEXT', 'text', 'Free Text', '', '', 'Free text not following any standard');
 
 CREATE TABLE rank(
-  id TEXT PRIMARY KEY,
-  name TEXT DEFAULT '',
-  plural TEXT DEFAULT '',
-  marker TEXT DEFAULT '',
-  major_rank_id TEXT REFERENCES rank(id),
-  ambiguous_marker INTEGER DEFAULT 0, -- bool
-  family_group INTEGER DEFAULT 0, -- bool
-  genus_group INTEGER DEFAULT 0, -- bool
-  infraspecific INTEGER DEFAULT 0, -- bool
-  legacy INTEGER DEFAULT 0, -- bool
-  linnean INTEGER DEFAULT 0, -- bool
-  suprageneric INTEGER DEFAULT 0, -- bool
-  supraspecific INTEGER DEFAULT 0, -- bool
-  uncomparable INTEGER DEFAULT 0 -- bool
+  col__id TEXT PRIMARY KEY,
+  col__name TEXT DEFAULT '',
+  col__plural TEXT DEFAULT '',
+  col__marker TEXT DEFAULT '',
+  col__major_rank_id TEXT REFERENCES rank(col__id),
+  col__ambiguous_marker INTEGER DEFAULT 0, -- bool
+  col__family_group INTEGER DEFAULT 0, -- bool
+  col__genus_group INTEGER DEFAULT 0, -- bool
+  col__infraspecific INTEGER DEFAULT 0, -- bool
+  col__legacy INTEGER DEFAULT 0, -- bool
+  col__linnean INTEGER DEFAULT 0, -- bool
+  col__suprageneric INTEGER DEFAULT 0, -- bool
+  col__supraspecific INTEGER DEFAULT 0, -- bool
+  col__uncomparable INTEGER DEFAULT 0 -- bool
 ) STRICT;
 
 INSERT INTO
   rank(
-    id,
-    name,
-    plural,
-    marker,
-    major_rank_id,
-    ambiguous_marker,
-    family_group,
-    genus_group,
-    infraspecific,
-    legacy,
-    linnean,
-    suprageneric,
-    supraspecific,
-    uncomparable
+    col__id,
+    col__name,
+    col__plural,
+    col__marker,
+    col__major_rank_id,
+    col__ambiguous_marker,
+    col__family_group,
+    col__genus_group,
+    col__infraspecific,
+    col__legacy,
+    col__linnean,
+    col__suprageneric,
+    col__supraspecific,
+    col__uncomparable
   )
 VALUES
 ('', '', '', '', '', 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -980,15 +980,15 @@ VALUES
 ('UNRANKED', 'unranked', '', '', 'UNRANKED', 0, 0, 0, 0, 0, 0, 0, 0, 1);
 
 CREATE TABLE geo_time (
-  id TEXT PRIMARY KEY,
-  parent_id TEXT REFERENCES geo_time(id),
-  name TEXT DEFAULT '',
-  type TEXT DEFAULT '',
-  start REAL DEFAULT 0,
-  end REAL) STRICT;
+  col__id TEXT PRIMARY KEY,
+  col__parent_id TEXT REFERENCES geo_time(col__id),
+  col__name TEXT DEFAULT '',
+  col__type TEXT DEFAULT '',
+  col__start REAL DEFAULT 0,
+  col__end REAL) STRICT;
 
 INSERT INTO
-  geo_time (id, name, type, start, end, parent_id)
+  geo_time (col__id, col__name, col__type, col__start, col__end, col__parent_id)
 VALUES
 ('', '', '', 0, 0, ''),
 ('HADEAN', 'Hadean', 'eon', 4567.0, 4000.0, 'PRECAMBRIAN'),
